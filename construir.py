@@ -11,6 +11,7 @@ Uso:
 """
 import argparse
 import datetime as dt
+import hashlib
 import json
 import math
 import os
@@ -68,6 +69,10 @@ TEXTOS = {
         },
         "foto": "Foto", "leer_columna": "Leer la columna", "menu": "Secciones",
         "nl_baja": "Gratis. Te das de baja cuando quieras, con un clic.",
+        "episodio": "Episodio", "ver_video": "Ver el episodio", "solo_audio": "Solo audio",
+        "aviso_youtube": "Al pulsar se carga el reproductor de YouTube.",
+        "escuchalo_en": "Escúchalo en", "mas_episodios": "Más episodios", "ultimo_episodio": "Último episodio",
+        "todos_episodios": "Todos los episodios", "en_espanol": "", "minutos": "min",
     },
     "en": {
         "portada": "Home", "newsletter": "Newsletter", "suscribete": "Subscribe",
@@ -94,6 +99,10 @@ TEXTOS = {
         },
         "foto": "Photo", "leer_columna": "Read the column", "menu": "Sections",
         "nl_baja": "Free. Unsubscribe any time, in one click.",
+        "episodio": "Episode", "ver_video": "Watch the episode", "solo_audio": "Audio only",
+        "aviso_youtube": "Clicking loads the YouTube player.",
+        "escuchalo_en": "Listen on", "mas_episodios": "More episodes", "ultimo_episodio": "Latest episode",
+        "todos_episodios": "All episodes", "en_espanol": "Episodes are in Spanish.", "minutos": "min",
     },
 }
 
@@ -194,6 +203,21 @@ def cargar_noticias(avisos):
     return noticias
 
 
+def cargar_episodios():
+    ruta = RAIZ / "contenido" / "podcast" / "episodios.json"
+    if not ruta.exists():
+        return []
+    episodios = []
+    for e in json.loads(ruta.read_text(encoding="utf-8")):
+        if e.get("oculto") or not e.get("fecha"):
+            continue
+        e = dict(e)
+        e["fecha"] = dt.date.fromisoformat(e["fecha"])
+        episodios.append(e)
+    episodios.sort(key=lambda e: e["fecha"], reverse=True)
+    return episodios
+
+
 # ---------------------------------------------------------------- render
 class Constructor:
     def __init__(self, preview):
@@ -206,7 +230,9 @@ class Constructor:
         self.avisos = []
         self.noticias = cargar_noticias(self.avisos)
         self.paginas = []  # (ruta, {idioma: url}) para el sitemap
-        self.version = dt.datetime.now().strftime("%Y%m%d%H%M")
+        self.episodios = cargar_episodios()
+        # la versión cambia solo si cambia el CSS (así no hay cambios falsos en cada construcción)
+        self.version = hashlib.md5((RAIZ / "estaticos" / "css" / "estilos.css").read_bytes()).hexdigest()[:8]
 
     def rel_factory(self, actual):
         """Devuelve una función que convierte rutas del sitio en enlaces relativos desde 'actual'."""
@@ -276,15 +302,18 @@ class Constructor:
             resto = [v for v in actualidad if v is not destacada][:6]
             opinion = [v for v in vista if v["seccion"] == "opinion"][:3]
 
+            episodios = [self.vista_episodio(e, idioma) for e in self.episodios]
+
             # portada
             self.escribir(PREFIJO[idioma], "portada.html", idioma,
                           {i: PREFIJO[i] for i in IDIOMAS},
                           destacada=destacada, resto=resto, opinion=opinion,
+                          ultimo_episodio=episodios[0] if episodios else None,
                           titulo_pagina=None, descripcion=self.sitio["textos"][idioma]["descripcion"])
 
             # secciones
             for clave in SECCIONES:
-                lista = [v for v in vista if v["seccion"] == clave]
+                lista = episodios if clave == "podcast" else [v for v in vista if v["seccion"] == clave]
                 self.escribir(url_seccion(clave, idioma), "seccion.html", idioma,
                               {i: url_seccion(clave, i) for i in IDIOMAS},
                               clave=clave, nombre=SECCIONES[clave][idioma][1], lista=lista,
@@ -309,6 +338,15 @@ class Constructor:
                               titulo_pagina=v["seo_titulo"], descripcion=v["seo_descripcion"],
                               json_ld=self.json_ld(v, idioma))
 
+            # episodios del podcast (solo en español: el podcast es en español)
+            if idioma == "es":
+                for k, ep in enumerate(episodios):
+                    otros = [x for x in episodios if x is not ep][:3]
+                    self.escribir(ep["url"], "episodio.html", "es", {"es": ep["url"]},
+                                  ep=ep, otros=otros, titulo_pagina=ep["titulo"],
+                                  descripcion=(ep["entradilla"] or self.sitio["textos"]["es"]["podcast"])[:160],
+                                  json_ld=self.json_ld_episodio(ep))
+
             self.rss(idioma, vista)
 
         # 404 (solo en español, con enlace a ambas portadas)
@@ -324,6 +362,47 @@ class Constructor:
                  etiquetas=n["etiquetas"], portada=n["portada"],
                  autor=n["autor"] or self.sitio["autor_por_defecto"], _n=n)
         return v
+
+    def vista_episodio(self, e, idioma):
+        texto = e.get("texto") or []
+        entradilla = texto[0] if texto else ""
+        if len(entradilla) > 170:
+            entradilla = entradilla[:170].rsplit(" ", 1)[0] + "…"
+        mini = f"https://i.ytimg.com/vi/{e['youtube']}/mqdefault.jpg" if e.get("youtube") else ""
+        minutos = e.get("duracion_min")
+        return {
+            **e,
+            "url": f"podcast/{e['id']}/",
+            "seccion": "podcast", "seccion_nombre": SECCIONES["podcast"][idioma][1],
+            "seccion_url": url_seccion("podcast", idioma),
+            "fecha_larga": fecha_larga(e["fecha"], idioma), "fecha_corta": fecha_corta(e["fecha"], idioma),
+            "entradilla": entradilla,
+            "duracion": f"{minutos} {TEXTOS[idioma]['minutos']}" if minutos else "",
+            "portada": {"imagen": mini, "credito": "", "foco": "50% 50%",
+                        "rotulo": e["titulo"] if len(e["titulo"]) <= 14 else TEXTOS[idioma]["episodio"],
+                        "dato": fecha_corta(e["fecha"], idioma)},
+            "autor": "Bola Pádel Podcast",
+        }
+
+    def json_ld_episodio(self, ep):
+        datos = {
+            "@context": "https://schema.org", "@type": "PodcastEpisode",
+            "name": ep["titulo"], "datePublished": ep["fecha"].isoformat(),
+            "description": " ".join(ep.get("texto") or [])[:500], "inLanguage": "es",
+            "url": self.absoluta(ep["url"]),
+            "partOfSeries": {"@type": "PodcastSeries", "name": "Bola Pádel Podcast",
+                             "url": self.absoluta(url_seccion("podcast", "es"))},
+        }
+        if ep.get("duracion_min"):
+            datos["timeRequired"] = f"PT{ep['duracion_min']}M"
+        if ep.get("audio"):
+            datos["associatedMedia"] = {"@type": "MediaObject", "contentUrl": ep["audio"]}
+        if ep.get("youtube"):
+            datos["video"] = {"@type": "VideoObject", "name": ep["titulo"],
+                              "embedUrl": f"https://www.youtube-nocookie.com/embed/{ep['youtube']}",
+                              "thumbnailUrl": f"https://i.ytimg.com/vi/{ep['youtube']}/maxresdefault.jpg",
+                              "uploadDate": ep["fecha"].isoformat()}
+        return json.dumps(datos, ensure_ascii=False)
 
     def json_ld(self, v, idioma):
         imagen = self.absoluta(v["portada"]["imagen"]) if v["portada"]["imagen"] else self.absoluta("img/compartir.jpg")

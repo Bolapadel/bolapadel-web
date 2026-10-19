@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% import "_piezas.html" as p with context %}
+{% set seccion_activa = 'podcast' %}
+{% block og %}
+<meta property="og:type" content="video.episode">
+<meta property="og:title" content="{{ ep.titulo }}">
+<meta property="og:description" content="{{ descripcion }}">
+<meta property="og:image" content="{% if ep.youtube %}https://i.ytimg.com/vi/{{ ep.youtube }}/maxresdefault.jpg{% else %}{{ sitio.url }}/img/compartir.jpg{% endif %}">
+<meta property="og:url" content="{{ canonical }}">
+{% endblock %}
+{% block cabeza %}
+<script type="application/ld+json">{{ json_ld|safe }}</script>
+{% endblock %}
+{% block contenido %}
+<article class="noticia episodio">
+  <header class="envoltura noticia__cab">
+    <p class="antetitulo"><a href="{{ rel(ep.seccion_url) }}">{{ t.pod_titulo }}</a></p>
+    <h1 class="noticia__titulo">{{ ep.titulo }}</h1>
+    <p class="firma"><time datetime="{{ ep.fecha.isoformat() }}">{{ ep.fecha_larga }}</time>{% if ep.duracion %} · {{ ep.duracion }}{% endif %}</p>
+  </header>
+
+  <div class="envoltura reproductor">
+    {% if ep.youtube %}
+    <div class="video" data-video="{{ ep.youtube }}" data-titulo="{{ ep.titulo }}">
+      <img src="https://i.ytimg.com/vi/{{ ep.youtube }}/maxresdefault.jpg" alt="" referrerpolicy="no-referrer" width="1280" height="720"
+           onload="if(this.naturalWidth<200){this.src='https://i.ytimg.com/vi/{{ ep.youtube }}/hqdefault.jpg'}">
+      <button type="button" class="video__play"><span class="video__icono" aria-hidden="true"></span>{{ t.ver_video }}</button>
+      <p class="video__aviso">{{ t.aviso_youtube }}</p>
+    </div>
+    {% endif %}
+    {% if ep.audio %}
+    <div class="audio">
+      <p class="lado__titulo">{{ t.solo_audio }}</p>
+      <audio controls preload="none" src="{{ ep.audio }}"></audio>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="envoltura noticia__rejilla">
+    <div class="cuerpo">
+      {% for parrafo in ep.texto or [] %}<p>{{ parrafo }}</p>
+      {% endfor %}
+    </div>
+    <aside class="noticia__lado">
+      <div>
+        <p class="lado__titulo">{{ t.escuchalo_en }}</p>
+        <div class="compartir">
+          {% if ep.spotify %}<a href="{{ ep.spotify }}" target="_blank" rel="noopener">Spotify</a>{% endif %}
+          {% if ep.youtube %}<a href="https://www.youtube.com/watch?v={{ ep.youtube }}" target="_blank" rel="noopener">YouTube</a>{% endif %}
+        </div>
+      </div>
+      <div>
+        <p class="lado__titulo">{{ t.compartir }}</p>
+        <div class="compartir">
+          <a href="https://wa.me/?text={{ (ep.titulo ~ ' ' ~ canonical)|urlencode }}" target="_blank" rel="noopener">WhatsApp</a>
+          <a href="https://twitter.com/intent/tweet?text={{ ep.titulo|urlencode }}&amp;url={{ canonical|urlencode }}" target="_blank" rel="noopener">X</a>
+          <button type="button" data-copiar="{{ canonical }}" data-ok="{{ t.copiado }}">{{ t.copiar }}</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="envoltura">
+    <aside class="caja-nl">
+      <div>
+        <p class="antetitulo">{{ t.newsletter }}</p>
+        <h2 class="caja-nl__titulo">{{ t.nl_titulo }}</h2>
+        <p>{{ textos_sitio.newsletter }}</p>
+      </div>
+      {{ p.form_newsletter('episodio') }}
+    </aside>
+  </div>
+</article>
+
+{% if otros %}
+<section class="bloque">
+  <div class="envoltura">
+    <div class="bloque__cab">
+      <h2 class="titulo-bloque">{{ t.mas_episodios }}</h2>
+      <a class="enlace-flecha" href="{{ rel(ep.seccion_url) }}">{{ t.todos_episodios }}</a>
+    </div>
+    <div class="rejilla">{% for r in otros %}{{ p.tarjeta(r) }}{% endfor %}</div>
+  </div>
+</section>
+{% endif %}
+
+<script>
+(function () {
+  var v = document.querySelector('.video');
+  if (!v) return;
+  v.querySelector('.video__play').addEventListener('click', function () {
+    var f = document.createElement('iframe');
+    f.src = 'https://www.youtube-nocookie.com/embed/' + v.getAttribute('data-video') + '?autoplay=1&rel=0';
+    f.title = v.getAttribute('data-titulo');
+    f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+    f.allowFullscreen = true;
+    v.innerHTML = '';
+    v.appendChild(f);
+    v.classList.add('video--activo');
+  });
+})();
+</script>
+{% endblock %}

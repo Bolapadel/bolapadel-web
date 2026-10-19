@@ -47,11 +47,21 @@
       <p class="antetitulo">{{ secciones[2][1] }}</p>
       <h2 class="banda__titulo">{{ t.pod_titulo }}</h2>
       <p class="banda__texto">{{ textos_sitio.podcast }}</p>
+      {% if ultimo_episodio %}
+      <a class="ultimo-ep" href="{{ rel(ultimo_episodio.url) }}">
+        {% if ultimo_episodio.youtube %}<img src="https://i.ytimg.com/vi/{{ ultimo_episodio.youtube }}/mqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" width="320" height="180">{% endif %}
+        <span class="ultimo-ep__texto">
+          <span class="ultimo-ep__eti">{{ t.ultimo_episodio }} · {{ ultimo_episodio.fecha_corta }}{% if ultimo_episodio.duracion %} · {{ ultimo_episodio.duracion }}{% endif %}</span>
+          <span class="ultimo-ep__titulo">{{ ultimo_episodio.titulo }}</span>
+        </span>
+      </a>
+      {% else %}
       <ul class="datos">
         {% for d in textos_sitio.podcast_datos %}<li>{{ d }}</li>{% endfor %}
       </ul>
+      {% endif %}
       <div class="botones">
-        <a class="boton boton--linea" href="{{ rel(secciones[2][2]) }}">{{ t.pod_ver }}</a>
+        <a class="boton boton--linea" href="{{ rel(secciones[2][2]) }}">{{ t.todos_episodios }}</a>
         {% for e in sitio.podcast.enlaces %}<a class="boton boton--linea" href="{{ e.url }}" target="_blank" rel="noopener">{{ e.nombre }}</a>{% endfor %}
       </div>
     </div>

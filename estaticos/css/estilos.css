@@ -542,3 +542,43 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; scroll-behavior: auto !important; }
 }
+
+/* ---------------------------------------------------------------- podcast */
+.reproductor { display: flex; flex-direction: column; gap: 16px; margin-bottom: clamp(28px, 4.5vw, 52px); }
+.video {
+  position: relative; aspect-ratio: 16 / 9; max-width: 100%; overflow: hidden;
+  background: #071A33; display: grid; place-items: center;
+}
+.video img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .85; }
+.video__play {
+  position: relative; display: inline-flex; align-items: center; gap: 12px; cursor: pointer;
+  font-family: var(--f-titular); font-weight: 700; font-size: clamp(1.1rem, 2.4vw, 1.5rem);
+  letter-spacing: .04em; text-transform: uppercase;
+  background: var(--lima); color: var(--sobre-lima); border: 0; border-radius: var(--radio);
+  padding: 14px 24px 14px 18px; box-shadow: 0 10px 30px rgba(0, 0, 0, .35);
+}
+.video__play:hover { background: var(--lima-hover); }
+.video__icono {
+  width: 0; height: 0; border-style: solid; border-width: 10px 0 10px 16px;
+  border-color: transparent transparent transparent var(--sobre-lima);
+}
+.video__aviso {
+  position: absolute; left: 0; right: 0; bottom: 0; margin: 0; padding: 8px 12px;
+  font-size: .75rem; color: #E4ECF7; background: linear-gradient(transparent, rgba(0, 0, 0, .6));
+  text-align: center;
+}
+.video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.audio { max-width: var(--ancho-texto); }
+.audio audio { width: 100%; }
+.nota-idioma { margin: 0 0 18px; font-size: .9rem; color: var(--gris); }
+
+.ultimo-ep {
+  display: grid; grid-template-columns: minmax(0, 150px) minmax(0, 1fr); gap: 14px; align-items: center;
+  text-decoration: none; color: #FFFFFF; background: rgba(255, 255, 255, .08);
+  border-radius: var(--radio); padding: 10px; margin-top: 4px;
+}
+.ultimo-ep:hover { background: rgba(255, 255, 255, .14); }
+.ultimo-ep img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--radio); }
+.ultimo-ep__texto { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.ultimo-ep__eti { font-size: .72rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--lima-claro); }
+.ultimo-ep__titulo { font-family: var(--f-titular); font-weight: 700; font-size: 1.25rem; line-height: 1.08; }

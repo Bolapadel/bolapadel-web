@@ -20,6 +20,9 @@
   <div class="envoltura">
     {% if not lista %}
     <div class="vacio"><p>{{ t.pod_vacio if clave == 'podcast' else t.seccion_vacia }}</p></div>
+    {% elif clave == 'podcast' %}
+    {% if t.en_espanol %}<p class="nota-idioma">{{ t.en_espanol }}</p>{% endif %}
+    <div class="rejilla">{% for n in lista %}{{ p.tarjeta(n) }}{% endfor %}</div>
     {% elif clave == 'opinion' %}
     <div class="lista">{% for n in lista %}{{ p.columna(n, false) }}{% endfor %}</div>
     {% else %}

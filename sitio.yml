@@ -14,7 +14,11 @@ newsletter:
   url_suscripcion: ""            # enlace o formulario de MailerLite
 
 podcast:
-  enlaces: []                    # - {nombre: Spotify, url: https://...}
+  rss_spotify: https://anchor.fm/s/fe8af65c/podcast/rss
+  youtube_canal_id: UCzM7UB5_kJ26qKOr4Kl5epA
+  enlaces:
+    - {nombre: Spotify, url: "https://podcasters.spotify.com/pod/show/bola-pdel"}
+    - {nombre: YouTube, url: "https://www.youtube.com/@Bolapadel"}
 
 textos:
   es:

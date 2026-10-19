@@ -22,6 +22,12 @@ Nada se publica sin el OK de Luis. Primero se le enseña la noticia redactada; s
 - Descarga: abrir `https://portal.greenfly.com/library/media/<ID>/download?galleryId=<galería>` en el navegador integrado (se guarda en ~/Downloads) y pasarla al espacio de trabajo.
 - Web: lado largo 1600-1750 px, JPEG calidad 72-80, en `estaticos/img/noticias/`. Crédito: «Nombre del fotógrafo / Premier Padel» (sale en el título del archivo en Greenfly). En fotos verticales, ajustar `foco` para no cortar caras.
 
+## Podcast
+- Los episodios salen solos: `.github/workflows/podcast.yml` ejecuta `podcast.py` dos veces al día, lee el RSS de Spotify for Creators y el de YouTube (datos en `sitio.yml`), los une por título/número/fecha y guarda `contenido/podcast/episodios.json`. Luego construye y publica.
+- Los clips y shorts (< 20 min) no entran. Para ocultar un episodio: `"oculto": true` en el JSON.
+- De las descripciones se quita la publicidad y los enlaces a redes (lista `CORTES` en `podcast.py`).
+- El vídeo de YouTube solo se carga si el lector pulsa «Ver el episodio» (youtube-nocookie), para no meter cookies.
+
 ## Tono editorial
 Frases cortas, directo, confesional, estilo Isra Bravo. Nada de clickbait ni lenguaje corporativo. Respeto total a jugadores, representantes y sus entornos. Sin párrafos-bloque. Bola Pádel y Padelkora son marcas separadas: no mezclarlas.
 

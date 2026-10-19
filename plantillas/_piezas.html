@@ -3,7 +3,8 @@
 {% macro portada(n, tam='m') %}
 {% if n.portada.imagen %}
 <figure class="portada portada--foto portada--{{ tam }}">
-  <img src="{{ rel(n.portada.imagen) }}" alt="" {% if tam in ('l', 'xl') %}fetchpriority="high"{% else %}loading="lazy"{% endif %} style="object-position: {{ n.portada.foco }}">
+  {% set externa = n.portada.imagen.startswith('http') %}
+  <img src="{{ n.portada.imagen if externa else rel(n.portada.imagen) }}" alt=""{% if externa %} referrerpolicy="no-referrer"{% endif %} {% if tam in ('l', 'xl') %}fetchpriority="high"{% else %}loading="lazy"{% endif %} style="object-position: {{ n.portada.foco }}">
   {% if n.portada.credito %}<figcaption>{{ t.foto }}: {{ n.portada.credito }}</figcaption>{% endif %}
 </figure>
 {% else %}
@@ -23,7 +24,7 @@
   <a class="tarjeta__enlace" href="{{ rel(n.url) }}">
     {{ portada(n, 's') }}
     <div class="tarjeta__texto">
-      <p class="antetitulo">{{ n.seccion_nombre }} · <time datetime="{{ n.fecha.isoformat() }}">{{ n.fecha_corta }}</time></p>
+      <p class="antetitulo">{{ n.seccion_nombre }} · <time datetime="{{ n.fecha.isoformat() }}">{{ n.fecha_corta }}</time>{% if n.duracion %} · {{ n.duracion }}{% endif %}</p>
       <h3 class="tarjeta__titulo">{{ n.titulo }}</h3>
       <p class="tarjeta__entradilla">{{ n.entradilla }}</p>
     </div>
