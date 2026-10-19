@@ -24,7 +24,7 @@ podcast:
 # Códigos de descuento de los patrocinadores (salen en el podcast).
 # Para cambiar un código o añadir una marca, edita esta lista.
 codigos_descuento:
-  - {marca: PadelProShop, url: "https://padelproshop.com", codigo: BOLAPADEL, descuento: "10%"}
+  - {marca: PadelPROShop, url: "https://padelproshop.com", codigo: BOLAPADEL, descuento: "10%"}
   - {marca: Acepad, url: "https://acepadshop.com", codigo: BOLAPADEL, descuento: "10%"}
   - {marca: Samogrip, url: "https://samogrip.com", codigo: Bolapadel10, descuento: "10%"}
 
