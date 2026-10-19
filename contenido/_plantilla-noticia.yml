@@ -12,8 +12,9 @@ destacada: false             # true = va arriba del todo en la portada
 etiquetas: [Torneo, Jugador 1, Jugador 2]   # la primera aparece junto a la sección
 
 portada:
-  imagen: ""                 # foto propia o con derechos (p. ej. img/noticias/milano.jpg). Vacío = portada gráfica
-  credito: ""                # autor de la foto, si la hay
+  imagen: ""                 # foto propia, cedida o de prensa autorizada (Greenfly de Premier Padel), en estaticos/img/noticias/. Vacío = portada gráfica
+  credito: ""                # "Nombre del fotógrafo / Premier Padel" (sale en la foto)
+  foco: "50% 40%"            # punto de la foto que nunca se recorta (horizontal y vertical, en %); útil en fotos verticales
   rotulo: "Milano P1"        # texto grande de la portada gráfica (corto: 1-3 palabras o un marcador)
   dato: "Final · 18 oct"     # etiqueta pequeña de la portada gráfica
 

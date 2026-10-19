@@ -3,7 +3,7 @@
 {% macro portada(n, tam='m') %}
 {% if n.portada.imagen %}
 <figure class="portada portada--foto portada--{{ tam }}">
-  <img src="{{ rel(n.portada.imagen) }}" alt="" loading="lazy">
+  <img src="{{ rel(n.portada.imagen) }}" alt="" {% if tam in ('l', 'xl') %}fetchpriority="high"{% else %}loading="lazy"{% endif %} style="object-position: {{ n.portada.foco }}">
   {% if n.portada.credito %}<figcaption>{{ t.foto }}: {{ n.portada.credito }}</figcaption>{% endif %}
 </figure>
 {% else %}

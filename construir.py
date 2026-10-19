@@ -155,6 +155,7 @@ def cargar_noticias(avisos):
                 "credito": portada.get("credito") or "",
                 "rotulo": portada.get("rotulo") or SECCIONES[seccion]["es"][1],
                 "dato": portada.get("dato") or "",
+                "foco": portada.get("foco") or "50% 50%",
             },
         }
         for idioma in IDIOMAS:
