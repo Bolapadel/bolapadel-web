@@ -1,0 +1,31 @@
+# Configuración general de la web de Bola Pádel.
+# Lo que esté vacío ("") no se muestra en la web hasta que se rellene.
+
+nombre: Bola Pádel
+url: https://bolapadel.es        # dirección final de la web (sin barra al final)
+dominio: ""                      # al conectar el dominio: bolapadel.es (crea el archivo CNAME)
+autor_por_defecto: Luis González
+
+redes:
+  instagram: ""                  # p. ej. https://www.instagram.com/...
+  tiktok: ""
+
+newsletter:
+  url_suscripcion: ""            # enlace o formulario de MailerLite
+
+podcast:
+  enlaces: []                    # - {nombre: Spotify, url: https://...}
+
+textos:
+  es:
+    lema: "Pádel profesional. Sin ruido."
+    descripcion: "Bola Pádel: actualidad del circuito profesional de pádel, opinión, podcast y newsletter semanal."
+    newsletter: "Cada semana, en tu correo: lo que ha pasado en el pádel y lo que pienso de ello."
+    podcast: "Tertulia de pádel sin guion, con colaboradores en España y Argentina. Entre 40 y 45 minutos."
+    podcast_datos: ["Tertulia sin guion", "40-45 min", "España · Argentina"]
+  en:
+    lema: "Pro padel. No noise."
+    descripcion: "Bola Pádel: pro padel tour news, opinion, podcast and a weekly newsletter."
+    newsletter: "Every week, in your inbox: what happened in padel and what I think about it. Written in Spanish."
+    podcast: "An unscripted padel roundtable with contributors in Spain and Argentina. Forty to forty-five minutes, in Spanish."
+    podcast_datos: ["Unscripted roundtable", "40-45 min", "Spain · Argentina"]

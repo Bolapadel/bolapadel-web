@@ -1,0 +1,42 @@
+fecha: 2026-10-11
+seccion: actualidad
+autor: Luis González
+destacada: false
+etiquetas: [Germany P2, Martina Calvo, Claudia Fernández, Ari Sánchez, Andrea Ustero]
+portada:
+  imagen: ""
+  credito: ""
+  rotulo: "Düsseldorf"
+  dato: "Final · 6-3 6-0"
+
+es:
+  slug: martina-calvo-claudia-fernandez-ganan-dusseldorf
+  titulo: "Martina Calvo y Claudia Fernández ganan en Düsseldorf"
+  entradilla: "Final sin discusión ante Ari Sánchez y Andrea Ustero: 6-3 y 6-0 en una hora y seis minutos."
+  seo_titulo: "Calvo y Fernández ganan el Germany P2 2026 en Düsseldorf"
+  seo_descripcion: "Martina Calvo y Claudia Fernández ganaron el Germany P2 2026 tras vencer 6-3, 6-0 a Ari Sánchez y Andrea Ustero en la final de Düsseldorf."
+  palabra_clave: "Martina Calvo Claudia Fernández"
+  cuerpo: |
+    Llegaban al Germany P2 como cuartas cabezas de serie. Se fueron con el título.
+
+    Martina Calvo y Claudia Fernández ganaron la final a Ari Sánchez y Andrea Ustero, terceras del cuadro. Y no dejaron hueco: 6-3 y 6-0.
+
+    El segundo set, en blanco.
+
+    Ojo al contexto. Sánchez y Ustero venían de ganar Rotterdam una semana antes. Aquí no encontraron la manera.
+
+en:
+  slug: martina-calvo-claudia-fernandez-win-dusseldorf
+  titulo: "Martina Calvo and Claudia Fernández win in Düsseldorf"
+  entradilla: "No contest in the final against Ari Sánchez and Andrea Ustero: 6-3, 6-0 in one hour and six minutes."
+  seo_titulo: "Calvo and Fernández win Germany P2 2026 in Düsseldorf"
+  seo_descripcion: "Martina Calvo and Claudia Fernández won Germany P2 2026, beating Ari Sánchez and Andrea Ustero 6-3, 6-0 in the Düsseldorf final."
+  palabra_clave: "Martina Calvo Claudia Fernández"
+  cuerpo: |
+    They came into Germany P2 as fourth seeds. They left with the title.
+
+    Martina Calvo and Claudia Fernández beat third seeds Ari Sánchez and Andrea Ustero in the final. And they left no gaps: 6-3, 6-0.
+
+    A bagel in the second set.
+
+    Some context: Sánchez and Ustero had won Rotterdam the week before. Here they couldn't find a way in.

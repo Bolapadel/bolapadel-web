@@ -1,0 +1,139 @@
+{% if not fragmento %}
+<!DOCTYPE html>
+<html lang="{{ idioma }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+{% endif %}
+<title>{% if titulo_pagina %}{{ titulo_pagina }} · {{ sitio.nombre }}{% else %}{{ sitio.nombre }}{% endif %}</title>
+{% if preview %}
+<meta name="claude:viewport-fit-sides" content="cover">
+{% endif %}
+<meta name="description" content="{{ descripcion }}">
+<meta name="theme-color" content="#195295">
+{% if canonical %}
+<link rel="canonical" href="{{ canonical }}">
+{% for i, u in alternos.items() %}
+<link rel="alternate" hreflang="{{ i }}" href="{{ u }}">
+{% endfor %}
+<link rel="alternate" hreflang="x-default" href="{{ alternos.es }}">
+{% endif %}
+<meta property="og:site_name" content="{{ sitio.nombre }}">
+<meta property="og:locale" content="{{ 'es_ES' if idioma == 'es' else 'en_GB' }}">
+{% block og %}
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{ titulo_pagina or sitio.nombre }}">
+<meta property="og:description" content="{{ descripcion }}">
+<meta property="og:image" content="{{ sitio.url }}/img/compartir.jpg">
+{% if canonical %}<meta property="og:url" content="{{ canonical }}">{% endif %}
+{% endblock %}
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="{{ rel('img/favicon.png') }}">
+<link rel="apple-touch-icon" href="{{ rel('img/apple-touch-icon.png') }}">
+<link rel="alternate" type="application/rss+xml" title="{{ sitio.nombre }}" href="{{ rel(prefijo ~ 'feed.xml') }}">
+{% if preview %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,500;1,400;1,500&family=Saira+Condensed:wght@600;700;800&family=Saira:wght@400;500;600&display=swap">
+{% endif %}
+<link rel="stylesheet" href="{{ rel('css/fuentes.css') }}">
+<link rel="stylesheet" href="{{ rel('css/estilos.css') }}{% if not preview %}?v={{ version }}{% endif %}">
+{% block cabeza %}{% endblock %}
+{% if not fragmento %}
+</head>
+<body>
+{% endif %}
+<a class="saltar" href="#contenido">{{ 'Saltar al contenido' if idioma == 'es' else 'Skip to content' }}</a>
+{% if preview %}
+<div class="aviso-preview"><div class="envoltura">{{ t.preview }}</div></div>
+{% endif %}
+<div class="barra-sup">
+  <div class="envoltura barra-sup__in">
+    <span class="fecha-hoy" data-idioma="{{ idioma }}"></span>
+    <a class="idioma" href="{{ alterno_rel }}" hreflang="{{ otro }}" lang="{{ otro }}">{{ t.idioma_otro }}</a>
+  </div>
+</div>
+<header class="cabecera">
+  <div class="envoltura cabecera__in">
+    <a class="marca" href="{{ rel(prefijo) }}">
+      <img src="{{ rel('img/logo.png') }}" alt="{{ sitio.nombre }}" width="72" height="72">
+      <span class="marca__lema">{{ textos_sitio.lema }}</span>
+    </a>
+    <nav class="menu" aria-label="{{ t.menu }}">
+      {% for clave, nombre, url in secciones %}
+      <a href="{{ rel(url) }}"{% if seccion_activa == clave %} aria-current="page"{% endif %}>{{ nombre }}</a>
+      {% endfor %}
+      <a class="menu__nl" href="{{ rel(prefijo ~ 'newsletter/') }}"{% if seccion_activa == 'newsletter' %} aria-current="page"{% endif %}>{{ t.newsletter }}</a>
+    </nav>
+  </div>
+</header>
+
+<main id="contenido">
+{% block contenido %}{% endblock %}
+</main>
+
+<footer class="pie">
+  <div class="envoltura pie__in">
+    <img src="{{ rel('img/logo.png') }}" alt="" width="84" height="84" loading="lazy">
+    <div>
+      <p class="pie__lema">{{ textos_sitio.lema }}</p>
+      <p class="pie__desc">{{ textos_sitio.descripcion }}</p>
+    </div>
+    <nav class="pie__nav" aria-label="{{ t.menu }}">
+      <a href="{{ rel(prefijo) }}">{{ t.portada }}</a>
+      {% for clave, nombre, url in secciones %}
+      <a href="{{ rel(url) }}">{{ nombre }}</a>
+      {% endfor %}
+      <a href="{{ rel(prefijo ~ 'newsletter/') }}">{{ t.newsletter }}</a>
+      {% if sitio.redes.instagram %}<a href="{{ sitio.redes.instagram }}" rel="me noopener" target="_blank">Instagram</a>{% endif %}
+      {% if sitio.redes.tiktok %}<a href="{{ sitio.redes.tiktok }}" rel="me noopener" target="_blank">TikTok</a>{% endif %}
+      <a href="{{ rel(prefijo ~ 'feed.xml') }}">RSS</a>
+    </nav>
+    <div class="pie__legal">
+      <span>© {{ ano }} {{ sitio.nombre }}. {{ t.derechos }}</span>
+      <a href="{{ alterno_rel }}" hreflang="{{ otro }}" lang="{{ otro }}">{{ t.idioma_otro }}</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  document.querySelectorAll('.fecha-hoy').forEach(function (el) {
+    try {
+      var loc = el.getAttribute('data-idioma') === 'en' ? 'en-GB' : 'es-ES';
+      var s = new Date().toLocaleDateString(loc, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      el.textContent = s.charAt(0).toUpperCase() + s.slice(1);
+    } catch (e) {}
+  });
+  document.querySelectorAll('[data-copiar]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var url = b.getAttribute('data-copiar');
+      var hecho = function () { b.textContent = b.getAttribute('data-ok'); };
+      var respaldo = function () {
+        var c = document.createElement('textarea');
+        c.value = url; c.setAttribute('readonly', ''); c.style.position = 'absolute'; c.style.left = '-9999px';
+        document.body.appendChild(c); c.select();
+        try { document.execCommand('copy'); hecho(); } catch (e) {}
+        document.body.removeChild(c);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(hecho, respaldo);
+      } else { respaldo(); }
+    });
+  });
+  document.querySelectorAll('.nl-form').forEach(function (f) {
+    f.addEventListener('submit', function (e) {
+      if (f.getAttribute('data-preview') === '1' || !f.getAttribute('action')) {
+        e.preventDefault();
+        var m = f.querySelector('.nl-form__msg');
+        m.textContent = f.getAttribute('data-msg');
+        m.hidden = false;
+      }
+    });
+  });
+})();
+</script>
+{% if not fragmento %}
+</body>
+</html>
+{% endif %}

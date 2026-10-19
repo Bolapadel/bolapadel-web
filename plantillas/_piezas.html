@@ -1,0 +1,55 @@
+{# Piezas reutilizables. Se importan con: {% import "_piezas.html" as p with context %} #}
+
+{% macro portada(n, tam='m') %}
+{% if n.portada.imagen %}
+<figure class="portada portada--foto portada--{{ tam }}">
+  <img src="{{ rel(n.portada.imagen) }}" alt="" loading="lazy">
+  {% if n.portada.credito %}<figcaption>{{ t.foto }}: {{ n.portada.credito }}</figcaption>{% endif %}
+</figure>
+{% else %}
+<div class="portada portada--{{ tam }} portada--{{ n.seccion }}" aria-hidden="true">
+  <svg class="portada__costura" viewBox="0 0 400 250" preserveAspectRatio="none" focusable="false">
+    <path d="M-40 70 C 100 -10, 300 -14, 440 78"/>
+    <path d="M-40 300 C 110 220, 290 220, 440 300"/>
+  </svg>
+  {% if n.portada.dato %}<span class="portada__dato">{{ n.portada.dato }}</span>{% endif %}
+  <span class="portada__rotulo"><span>{{ n.portada.rotulo }}</span></span>
+</div>
+{% endif %}
+{% endmacro %}
+
+{% macro tarjeta(n) %}
+<article class="tarjeta">
+  <a class="tarjeta__enlace" href="{{ rel(n.url) }}">
+    {{ portada(n, 's') }}
+    <div class="tarjeta__texto">
+      <p class="antetitulo">{{ n.seccion_nombre }} · <time datetime="{{ n.fecha.isoformat() }}">{{ n.fecha_corta }}</time></p>
+      <h3 class="tarjeta__titulo">{{ n.titulo }}</h3>
+      <p class="tarjeta__entradilla">{{ n.entradilla }}</p>
+    </div>
+  </a>
+</article>
+{% endmacro %}
+
+{% macro iniciales(nombre) %}{% for parte in nombre.split()[:2] %}{{ parte[0] }}{% endfor %}{% endmacro %}
+
+{% macro columna(n, grande=true) %}
+<article class="columna{% if not grande %} columna--lista{% endif %}">
+  <span class="iniciales" aria-hidden="true">{{ iniciales(n.autor) }}</span>
+  <div class="columna__texto">
+    <p class="antetitulo">{{ n.autor }} · <time datetime="{{ n.fecha.isoformat() }}">{{ n.fecha_corta }}</time></p>
+    <h3 class="columna__titulo"><a href="{{ rel(n.url) }}">{{ n.titulo }}</a></h3>
+    <p class="columna__entradilla">{{ n.entradilla }}</p>
+    <a class="enlace-flecha" href="{{ rel(n.url) }}">{{ t.leer_columna }}</a>
+  </div>
+</article>
+{% endmacro %}
+
+{% macro form_newsletter(id) %}
+<form class="nl-form"{% if sitio.newsletter.url_suscripcion and not preview %} action="{{ sitio.newsletter.url_suscripcion }}" method="post" target="_blank"{% endif %} data-preview="{{ '1' if preview else '0' }}" data-msg="{{ t.nl_aviso_preview if preview else t.nl_pendiente }}">
+  <label class="vh" for="nl-{{ id }}">{{ t.tu_correo }}</label>
+  <input id="nl-{{ id }}" type="email" name="fields[email]" placeholder="{{ t.tu_correo }}" required autocomplete="email">
+  <button type="submit">{{ t.apuntarme }}</button>
+  <p class="nl-form__msg" role="status" hidden></p>
+</form>
+{% endmacro %}

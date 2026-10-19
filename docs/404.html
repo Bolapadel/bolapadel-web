@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>404 · Bola Pádel</title>
+<meta name="description" content="">
+<meta name="theme-color" content="#195295">
+<meta property="og:site_name" content="Bola Pádel">
+<meta property="og:locale" content="es_ES">
+<meta property="og:type" content="website">
+<meta property="og:title" content="404">
+<meta property="og:description" content="">
+<meta property="og:image" content="https://bolapadel.es/img/compartir.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="/img/favicon.png">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<link rel="alternate" type="application/rss+xml" title="Bola Pádel" href="/feed.xml">
+<link rel="stylesheet" href="/css/fuentes.css">
+<link rel="stylesheet" href="/css/estilos.css?v=202610191056">
+</head>
+<body>
+<a class="saltar" href="#contenido">Saltar al contenido</a>
+<div class="barra-sup">
+  <div class="envoltura barra-sup__in">
+    <span class="fecha-hoy" data-idioma="es"></span>
+    <a class="idioma" href="/en/" hreflang="en" lang="en">English</a>
+  </div>
+</div>
+<header class="cabecera">
+  <div class="envoltura cabecera__in">
+    <a class="marca" href="/">
+      <img src="/img/logo.png" alt="Bola Pádel" width="72" height="72">
+      <span class="marca__lema">Pádel profesional. Sin ruido.</span>
+    </a>
+    <nav class="menu" aria-label="Secciones">
+      <a href="/actualidad/">Actualidad</a>
+      <a href="/opinion/">Opinión</a>
+      <a href="/podcast/">Podcast</a>
+      <a class="menu__nl" href="/newsletter/">Newsletter</a>
+    </nav>
+  </div>
+</header>
+
+<main id="contenido">
+<section class="cab-seccion cab-seccion--404">
+  <div class="envoltura">
+    <p class="antetitulo">404</p>
+    <h1 class="cab-seccion__titulo"><span>Esta bola se ha ido fuera de la pista</span></h1>
+    <p class="cab-seccion__desc">La página que buscas no existe o ha cambiado de sitio.</p>
+    <div class="botones">
+      <a class="boton" href="/">Volver a la portada</a>
+      <a class="boton boton--borde" href="/en/" lang="en">English</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="pie">
+  <div class="envoltura pie__in">
+    <img src="/img/logo.png" alt="" width="84" height="84" loading="lazy">
+    <div>
+      <p class="pie__lema">Pádel profesional. Sin ruido.</p>
+      <p class="pie__desc">Bola Pádel: actualidad del circuito profesional de pádel, opinión, podcast y newsletter semanal.</p>
+    </div>
+    <nav class="pie__nav" aria-label="Secciones">
+      <a href="/">Portada</a>
+      <a href="/actualidad/">Actualidad</a>
+      <a href="/opinion/">Opinión</a>
+      <a href="/podcast/">Podcast</a>
+      <a href="/newsletter/">Newsletter</a>
+      <a href="/feed.xml">RSS</a>
+    </nav>
+    <div class="pie__legal">
+      <span>© 2026 Bola Pádel. Todos los derechos reservados.</span>
+      <a href="/en/" hreflang="en" lang="en">English</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  document.querySelectorAll('.fecha-hoy').forEach(function (el) {
+    try {
+      var loc = el.getAttribute('data-idioma') === 'en' ? 'en-GB' : 'es-ES';
+      var s = new Date().toLocaleDateString(loc, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      el.textContent = s.charAt(0).toUpperCase() + s.slice(1);
+    } catch (e) {}
+  });
+  document.querySelectorAll('[data-copiar]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var url = b.getAttribute('data-copiar');
+      var hecho = function () { b.textContent = b.getAttribute('data-ok'); };
+      var respaldo = function () {
+        var c = document.createElement('textarea');
+        c.value = url; c.setAttribute('readonly', ''); c.style.position = 'absolute'; c.style.left = '-9999px';
+        document.body.appendChild(c); c.select();
+        try { document.execCommand('copy'); hecho(); } catch (e) {}
+        document.body.removeChild(c);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(hecho, respaldo);
+      } else { respaldo(); }
+    });
+  });
+  document.querySelectorAll('.nl-form').forEach(function (f) {
+    f.addEventListener('submit', function (e) {
+      if (f.getAttribute('data-preview') === '1' || !f.getAttribute('action')) {
+        e.preventDefault();
+        var m = f.querySelector('.nl-form__msg');
+        m.textContent = f.getAttribute('data-msg');
+        m.hidden = false;
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>

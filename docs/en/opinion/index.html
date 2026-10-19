@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Opinion · Bola Pádel</title>
+<meta name="description" content="Signed opinion. Full name included.">
+<meta name="theme-color" content="#195295">
+<link rel="canonical" href="https://bolapadel.es/en/opinion/">
+<link rel="alternate" hreflang="es" href="https://bolapadel.es/opinion/">
+<link rel="alternate" hreflang="en" href="https://bolapadel.es/en/opinion/">
+<link rel="alternate" hreflang="x-default" href="https://bolapadel.es/opinion/">
+<meta property="og:site_name" content="Bola Pádel">
+<meta property="og:locale" content="en_GB">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Opinion">
+<meta property="og:description" content="Signed opinion. Full name included.">
+<meta property="og:image" content="https://bolapadel.es/img/compartir.jpg">
+<meta property="og:url" content="https://bolapadel.es/en/opinion/"><meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="../../img/favicon.png">
+<link rel="apple-touch-icon" href="../../img/apple-touch-icon.png">
+<link rel="alternate" type="application/rss+xml" title="Bola Pádel" href="../feed.xml">
+<link rel="stylesheet" href="../../css/fuentes.css">
+<link rel="stylesheet" href="../../css/estilos.css?v=202610191056">
+</head>
+<body>
+<a class="saltar" href="#contenido">Skip to content</a>
+<div class="barra-sup">
+  <div class="envoltura barra-sup__in">
+    <span class="fecha-hoy" data-idioma="en"></span>
+    <a class="idioma" href="../../opinion/" hreflang="es" lang="es">Español</a>
+  </div>
+</div>
+<header class="cabecera">
+  <div class="envoltura cabecera__in">
+    <a class="marca" href="../">
+      <img src="../../img/logo.png" alt="Bola Pádel" width="72" height="72">
+      <span class="marca__lema">Pro padel. No noise.</span>
+    </a>
+    <nav class="menu" aria-label="Sections">
+      <a href="../news/">News</a>
+      <a href="./" aria-current="page">Opinion</a>
+      <a href="../podcast/">Podcast</a>
+      <a class="menu__nl" href="../newsletter/">Newsletter</a>
+    </nav>
+  </div>
+</header>
+
+<main id="contenido">
+<header class="cab-seccion">
+  <div class="envoltura">
+    <p class="antetitulo">Bola Pádel</p>
+    <h1 class="cab-seccion__titulo"><span>Opinion</span></h1>
+    <p class="cab-seccion__desc">Signed opinion. Full name included.</p>
+  </div>
+</header>
+
+<section class="bloque">
+  <div class="envoltura">
+    <div class="vacio"><p>Nothing published in this section yet.</p></div>
+  </div>
+</section>
+</main>
+
+<footer class="pie">
+  <div class="envoltura pie__in">
+    <img src="../../img/logo.png" alt="" width="84" height="84" loading="lazy">
+    <div>
+      <p class="pie__lema">Pro padel. No noise.</p>
+      <p class="pie__desc">Bola Pádel: pro padel tour news, opinion, podcast and a weekly newsletter.</p>
+    </div>
+    <nav class="pie__nav" aria-label="Sections">
+      <a href="../">Home</a>
+      <a href="../news/">News</a>
+      <a href="./">Opinion</a>
+      <a href="../podcast/">Podcast</a>
+      <a href="../newsletter/">Newsletter</a>
+      <a href="../feed.xml">RSS</a>
+    </nav>
+    <div class="pie__legal">
+      <span>© 2026 Bola Pádel. All rights reserved.</span>
+      <a href="../../opinion/" hreflang="es" lang="es">Español</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  document.querySelectorAll('.fecha-hoy').forEach(function (el) {
+    try {
+      var loc = el.getAttribute('data-idioma') === 'en' ? 'en-GB' : 'es-ES';
+      var s = new Date().toLocaleDateString(loc, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      el.textContent = s.charAt(0).toUpperCase() + s.slice(1);
+    } catch (e) {}
+  });
+  document.querySelectorAll('[data-copiar]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var url = b.getAttribute('data-copiar');
+      var hecho = function () { b.textContent = b.getAttribute('data-ok'); };
+      var respaldo = function () {
+        var c = document.createElement('textarea');
+        c.value = url; c.setAttribute('readonly', ''); c.style.position = 'absolute'; c.style.left = '-9999px';
+        document.body.appendChild(c); c.select();
+        try { document.execCommand('copy'); hecho(); } catch (e) {}
+        document.body.removeChild(c);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(hecho, respaldo);
+      } else { respaldo(); }
+    });
+  });
+  document.querySelectorAll('.nl-form').forEach(function (f) {
+    f.addEventListener('submit', function (e) {
+      if (f.getAttribute('data-preview') === '1' || !f.getAttribute('action')) {
+        e.preventDefault();
+        var m = f.querySelector('.nl-form__msg');
+        m.textContent = f.getAttribute('data-msg');
+        m.hidden = false;
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% import "_piezas.html" as p with context %}
+{% block contenido %}
+{% if destacada %}
+<section class="destacada">
+  <div class="envoltura destacada__in">
+    <a class="destacada__img" href="{{ rel(destacada.url) }}" tabindex="-1" aria-hidden="true">{{ p.portada(destacada, 'l') }}</a>
+    <div class="destacada__texto">
+      <p class="antetitulo"><a href="{{ rel(destacada.seccion_url) }}">{{ destacada.seccion_nombre }}</a>{% if destacada.etiquetas %} · {{ destacada.etiquetas[0] }}{% endif %}</p>
+      <h1 class="destacada__titulo"><a href="{{ rel(destacada.url) }}">{{ destacada.titulo }}</a></h1>
+      <p class="entradilla">{{ destacada.entradilla }}</p>
+      <p class="firma">{{ t.por }} <strong>{{ destacada.autor }}</strong> · <time datetime="{{ destacada.fecha.isoformat() }}">{{ destacada.fecha_larga }}</time></p>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if resto %}
+<section class="bloque">
+  <div class="envoltura">
+    <div class="bloque__cab">
+      <h2 class="titulo-bloque">{{ t.lo_ultimo }}</h2>
+      <a class="enlace-flecha" href="{{ rel(secciones[0][2]) }}">{{ t.ver_todo }}</a>
+    </div>
+    <div class="rejilla">
+      {% for n in resto %}{{ p.tarjeta(n) }}{% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if opinion %}
+<section class="opinion">
+  <div class="envoltura">
+    <div class="bloque__cab">
+      <h2 class="titulo-bloque">{{ secciones[1][1] }}</h2>
+      <a class="enlace-flecha" href="{{ rel(secciones[1][2]) }}">{{ t.ver_todo }}</a>
+    </div>
+    {% for n in opinion %}{{ p.columna(n, loop.first) }}{% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<section class="banda" id="newsletter">
+  <div class="envoltura banda__in">
+    <div class="banda__col">
+      <p class="antetitulo">{{ secciones[2][1] }}</p>
+      <h2 class="banda__titulo">{{ t.pod_titulo }}</h2>
+      <p class="banda__texto">{{ textos_sitio.podcast }}</p>
+      <ul class="datos">
+        {% for d in textos_sitio.podcast_datos %}<li>{{ d }}</li>{% endfor %}
+      </ul>
+      <div class="botones">
+        <a class="boton boton--linea" href="{{ rel(secciones[2][2]) }}">{{ t.pod_ver }}</a>
+        {% for e in sitio.podcast.enlaces %}<a class="boton boton--linea" href="{{ e.url }}" target="_blank" rel="noopener">{{ e.nombre }}</a>{% endfor %}
+      </div>
+    </div>
+    <div class="banda__col">
+      <p class="antetitulo">{{ t.newsletter }}</p>
+      <h2 class="banda__titulo">{{ t.nl_titulo }}</h2>
+      <p class="banda__texto">{{ textos_sitio.newsletter }}</p>
+      {{ p.form_newsletter('portada') }}
+      <p class="nota">{{ t.nl_baja }}</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

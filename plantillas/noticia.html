@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% import "_piezas.html" as p with context %}
+{% set seccion_activa = n.seccion %}
+{% block og %}
+<meta property="og:type" content="article">
+<meta property="og:title" content="{{ n.titulo }}">
+<meta property="og:description" content="{{ n.seo_descripcion }}">
+<meta property="og:image" content="{{ sitio.url }}/{{ n.portada.imagen or 'img/compartir.jpg' }}">
+<meta property="og:url" content="{{ canonical }}">
+<meta property="article:published_time" content="{{ n.fecha.isoformat() }}">
+<meta property="article:section" content="{{ n.seccion_nombre }}">
+<meta name="keywords" content="{{ n.palabra_clave }}{% for e in n.etiquetas %}, {{ e }}{% endfor %}">
+{% endblock %}
+{% block cabeza %}
+<script type="application/ld+json">{{ json_ld|safe }}</script>
+{% endblock %}
+{% block contenido %}
+<article class="noticia">
+  <header class="envoltura noticia__cab">
+    <p class="antetitulo"><a href="{{ rel(n.seccion_url) }}">{{ n.seccion_nombre }}</a>{% if n.etiquetas %} · {{ n.etiquetas[0] }}{% endif %}</p>
+    <h1 class="noticia__titulo">{{ n.titulo }}</h1>
+    <p class="noticia__entradilla">{{ n.entradilla }}</p>
+    <p class="firma">{{ t.por }} <strong>{{ n.autor }}</strong> · <time datetime="{{ n.fecha.isoformat() }}">{{ n.fecha_larga }}</time> · {{ n.minutos }} {{ t.min_lectura }}</p>
+  </header>
+
+  <div class="envoltura noticia__portada">{{ p.portada(n, 'xl') }}</div>
+
+  <div class="envoltura noticia__rejilla">
+    <div class="cuerpo">
+      {{ n.cuerpo_html|safe }}
+      <p class="cuerpo__firma">— {{ n.autor }}</p>
+    </div>
+    <aside class="noticia__lado">
+      {% if n.etiquetas %}
+      <div>
+        <p class="lado__titulo">{{ t.etiquetas }}</p>
+        <ul class="etiquetas">{% for e in n.etiquetas %}<li>{{ e }}</li>{% endfor %}</ul>
+      </div>
+      {% endif %}
+      <div>
+        <p class="lado__titulo">{{ t.compartir }}</p>
+        <div class="compartir">
+          <a href="https://wa.me/?text={{ (n.titulo ~ ' ' ~ canonical)|urlencode }}" target="_blank" rel="noopener">WhatsApp</a>
+          <a href="https://twitter.com/intent/tweet?text={{ n.titulo|urlencode }}&amp;url={{ canonical|urlencode }}" target="_blank" rel="noopener">X</a>
+          <button type="button" data-copiar="{{ canonical }}" data-ok="{{ t.copiado }}">{{ t.copiar }}</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="envoltura">
+    <aside class="caja-nl">
+      <div>
+        <p class="antetitulo">{{ t.newsletter }}</p>
+        <h2 class="caja-nl__titulo">{{ t.nl_titulo }}</h2>
+        <p>{{ textos_sitio.newsletter }}</p>
+      </div>
+      {{ p.form_newsletter('noticia') }}
+    </aside>
+  </div>
+</article>
+
+{% if relacionadas %}
+<section class="bloque">
+  <div class="envoltura">
+    <div class="bloque__cab"><h2 class="titulo-bloque">{{ t.sigue_leyendo }}</h2></div>
+    <div class="rejilla">{% for r in relacionadas %}{{ p.tarjeta(r) }}{% endfor %}</div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}
