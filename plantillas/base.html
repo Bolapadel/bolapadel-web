@@ -49,7 +49,6 @@
 {% endif %}
 <div class="barra-sup">
   <div class="envoltura barra-sup__in">
-    <span class="fecha-hoy" data-idioma="{{ idioma }}"></span>
     <a class="idioma" href="{{ alterno_rel }}" hreflang="{{ otro }}" lang="{{ otro }}">{{ t.idioma_otro }}</a>
   </div>
 </div>
@@ -98,13 +97,6 @@
 
 <script>
 (function () {
-  document.querySelectorAll('.fecha-hoy').forEach(function (el) {
-    try {
-      var loc = el.getAttribute('data-idioma') === 'en' ? 'en-GB' : 'es-ES';
-      var s = new Date().toLocaleDateString(loc, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-      el.textContent = s.charAt(0).toUpperCase() + s.slice(1);
-    } catch (e) {}
-  });
   document.querySelectorAll('[data-copiar]').forEach(function (b) {
     b.addEventListener('click', function () {
       var url = b.getAttribute('data-copiar');

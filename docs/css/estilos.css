@@ -160,7 +160,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   font-size: .74rem; letter-spacing: .1em; text-transform: uppercase;
 }
 .barra-sup__in {
-  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  display: flex; align-items: center; justify-content: flex-end; gap: 12px;
   min-height: 36px;
 }
 .idioma {
