@@ -16,6 +16,12 @@ Nada se publica sin el OK de Luis. Primero se le enseña la noticia redactada; s
 4. `python3 construir.py` (avisa si el SEO se sale de rango).
 5. Enseñar a Luis el texto. Con su OK: `git add -A && git commit && git push`.
 
+## Fotos
+- Luis está autorizado a usar las fotos de prensa de Premier Padel en Greenfly (portal.greenfly.com, canal 2089 → Biblioteca → Galerías). Hay que iniciar sesión con su cuenta: eso lo hace él, nunca Claude.
+- Elegir la foto mirando las etiquetas del archivo (nombres de jugadores) y enseñársela a Luis antes de usarla.
+- Descarga: abrir `https://portal.greenfly.com/library/media/<ID>/download?galleryId=<galería>` en el navegador integrado (se guarda en ~/Downloads) y pasarla al espacio de trabajo.
+- Web: lado largo 1600-1750 px, JPEG calidad 72-80, en `estaticos/img/noticias/`. Crédito: «Nombre del fotógrafo / Premier Padel» (sale en el título del archivo en Greenfly). En fotos verticales, ajustar `foco` para no cortar caras.
+
 ## Tono editorial
 Frases cortas, directo, confesional, estilo Isra Bravo. Nada de clickbait ni lenguaje corporativo. Respeto total a jugadores, representantes y sus entornos. Sin párrafos-bloque. Bola Pádel y Padelkora son marcas separadas: no mezclarlas.
 
