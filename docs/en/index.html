@@ -21,7 +21,7 @@
 <link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
 <link rel="alternate" type="application/rss+xml" title="Bola Pádel" href="feed.xml">
 <link rel="stylesheet" href="../css/fuentes.css">
-<link rel="stylesheet" href="../css/estilos.css?v=42509374">
+<link rel="stylesheet" href="../css/estilos.css?v=eede198a">
 </head>
 <body>
 <a class="saltar" href="#contenido">Skip to content</a>
@@ -133,11 +133,15 @@
       <p class="antetitulo">Newsletter</p>
       <h2 class="banda__titulo">The Bola Pádel newsletter</h2>
       <p class="banda__texto">Every week, in your inbox: what happened in padel and what I think about it. Written in Spanish.</p>
-      <form class="nl-form" data-preview="0" data-msg="You&#39;ll be able to subscribe here very soon.">
+      <form class="nl-form" action="https://assets.mailerlite.com/jsonp/1451964/forms/186985958894208872/subscribe" method="post" target="_blank" data-action="https://assets.mailerlite.com/jsonp/1451964/forms/186985958894208872/subscribe"      data-preview="0" data-msg="You&#39;ll be able to subscribe here very soon."
+      data-ok="You&#39;re in! If you get a confirmation email, open it and you&#39;re done." data-error="Something went wrong. Check your email address and try again in a moment." data-enviando="Signing up…">
   <label class="vh" for="nl-portada">Your email address</label>
   <input id="nl-portada" type="email" name="fields[email]" placeholder="Your email address" required autocomplete="email">
+  <input type="hidden" name="ml-submit" value="1">
+  <input type="hidden" name="anticsrf" value="true">
   <button type="submit">Sign me up</button>
   <p class="nl-form__msg" role="status" hidden></p>
+  <p class="nl-form__legal">Your email is only used to send you the Bola Pádel newsletter (controller: Luis González Sánchez). Managed by MailerLite.</p>
 </form>
 
       <p class="nota">Free. Unsubscribe any time, in one click.</p>
@@ -194,13 +198,32 @@
     });
   });
   document.querySelectorAll('.nl-form').forEach(function (f) {
+    var msg = f.querySelector('.nl-form__msg');
+    var boton = f.querySelector('button[type=submit]');
+    var aviso = function (texto, tipo) { msg.textContent = texto; msg.hidden = false; msg.setAttribute('data-tipo', tipo || ''); };
     f.addEventListener('submit', function (e) {
-      if (f.getAttribute('data-preview') === '1' || !f.getAttribute('action')) {
-        e.preventDefault();
-        var m = f.querySelector('.nl-form__msg');
-        m.textContent = f.getAttribute('data-msg');
-        m.hidden = false;
+      var destino = f.getAttribute('data-action');
+      if (f.getAttribute('data-preview') === '1' || !destino) {
+        e.preventDefault(); aviso(f.getAttribute('data-msg')); return;
       }
+      if (!window.fetch || !window.FormData) return; // sin JavaScript moderno: envío normal
+      e.preventDefault();
+      var datos = new FormData(f);
+      var original = boton.textContent;
+      boton.disabled = true; boton.textContent = f.getAttribute('data-enviando');
+      var fin = function (ok) {
+        boton.disabled = false; boton.textContent = original;
+        if (ok) { aviso(f.getAttribute('data-ok'), 'ok'); f.reset(); }
+        else { aviso(f.getAttribute('data-error'), 'error'); }
+      };
+      fetch(destino, { method: 'POST', body: datos })
+        .then(function (r) { return r.json(); })
+        .then(function (j) { fin(!!(j && j.success)); })
+        .catch(function () {
+          // si el navegador no deja leer la respuesta, se envía igualmente sin leerla
+          fetch(destino, { method: 'POST', body: datos, mode: 'no-cors' })
+            .then(function () { fin(true); }, function () { fin(false); });
+        });
     });
   });
 })();

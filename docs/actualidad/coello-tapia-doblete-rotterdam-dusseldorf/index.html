@@ -25,7 +25,7 @@
 <link rel="apple-touch-icon" href="../../img/apple-touch-icon.png">
 <link rel="alternate" type="application/rss+xml" title="Bola Pádel" href="../../feed.xml">
 <link rel="stylesheet" href="../../css/fuentes.css">
-<link rel="stylesheet" href="../../css/estilos.css?v=42509374">
+<link rel="stylesheet" href="../../css/estilos.css?v=eede198a">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "NewsArticle", "headline": "Coello y Tapia firman el doblete: Rotterdam y Düsseldorf", "description": "Coello y Tapia ganaron Rotterdam y Düsseldorf en semanas seguidas, las dos veces en la final contra Stupaczuk y Sanz. Resultados y contexto.", "inLanguage": "es", "datePublished": "2026-10-12", "dateModified": "2026-10-12", "author": {"@type": "Person", "name": "Luis González"}, "publisher": {"@type": "Organization", "name": "Bola Pádel", "logo": {"@type": "ImageObject", "url": "https://bolapadel.es/img/logo.png"}}, "image": ["https://bolapadel.es/img/noticias/germany-p2-2026-coello-tapia-final.jpg"], "keywords": "Coello Tapia Düsseldorf, Rotterdam P2, Germany P2, Coello, Tapia, Stupaczuk, Jon Sanz", "mainEntityOfPage": "https://bolapadel.es/actualidad/coello-tapia-doblete-rotterdam-dusseldorf/"}</script>
 </head>
 <body>
@@ -117,11 +117,15 @@
         <h2 class="caja-nl__titulo">La newsletter de Bola Pádel</h2>
         <p>Cada semana, en tu correo: lo que ha pasado en el pádel y lo que pienso de ello.</p>
       </div>
-      <form class="nl-form" data-preview="0" data-msg="Muy pronto podrás suscribirte desde aquí.">
+      <form class="nl-form" action="https://assets.mailerlite.com/jsonp/1451964/forms/186985958894208872/subscribe" method="post" target="_blank" data-action="https://assets.mailerlite.com/jsonp/1451964/forms/186985958894208872/subscribe"      data-preview="0" data-msg="Muy pronto podrás suscribirte desde aquí."
+      data-ok="¡Dentro! Ya estás en la lista. Si te llega un correo para confirmar, ábrelo y listo." data-error="No se ha podido completar. Revisa el correo y vuelve a intentarlo en un momento." data-enviando="Apuntando…">
   <label class="vh" for="nl-noticia">Tu correo electrónico</label>
   <input id="nl-noticia" type="email" name="fields[email]" placeholder="Tu correo electrónico" required autocomplete="email">
+  <input type="hidden" name="ml-submit" value="1">
+  <input type="hidden" name="anticsrf" value="true">
   <button type="submit">Apuntarme</button>
   <p class="nl-form__msg" role="status" hidden></p>
+  <p class="nl-form__legal">Tu correo solo se usa para enviarte la newsletter de Bola Pádel (responsable: Luis González Sánchez). Lo gestiona MailerLite.</p>
 </form>
 
     </aside>
@@ -223,13 +227,32 @@
     });
   });
   document.querySelectorAll('.nl-form').forEach(function (f) {
+    var msg = f.querySelector('.nl-form__msg');
+    var boton = f.querySelector('button[type=submit]');
+    var aviso = function (texto, tipo) { msg.textContent = texto; msg.hidden = false; msg.setAttribute('data-tipo', tipo || ''); };
     f.addEventListener('submit', function (e) {
-      if (f.getAttribute('data-preview') === '1' || !f.getAttribute('action')) {
-        e.preventDefault();
-        var m = f.querySelector('.nl-form__msg');
-        m.textContent = f.getAttribute('data-msg');
-        m.hidden = false;
+      var destino = f.getAttribute('data-action');
+      if (f.getAttribute('data-preview') === '1' || !destino) {
+        e.preventDefault(); aviso(f.getAttribute('data-msg')); return;
       }
+      if (!window.fetch || !window.FormData) return; // sin JavaScript moderno: envío normal
+      e.preventDefault();
+      var datos = new FormData(f);
+      var original = boton.textContent;
+      boton.disabled = true; boton.textContent = f.getAttribute('data-enviando');
+      var fin = function (ok) {
+        boton.disabled = false; boton.textContent = original;
+        if (ok) { aviso(f.getAttribute('data-ok'), 'ok'); f.reset(); }
+        else { aviso(f.getAttribute('data-error'), 'error'); }
+      };
+      fetch(destino, { method: 'POST', body: datos })
+        .then(function (r) { return r.json(); })
+        .then(function (j) { fin(!!(j && j.success)); })
+        .catch(function () {
+          // si el navegador no deja leer la respuesta, se envía igualmente sin leerla
+          fetch(destino, { method: 'POST', body: datos, mode: 'no-cors' })
+            .then(function () { fin(true); }, function () { fin(false); });
+        });
     });
   });
 })();

@@ -11,7 +11,8 @@ redes:
   tiktok: ""
 
 newsletter:
-  url_suscripcion: ""            # enlace o formulario de MailerLite
+  # formulario incrustado de MailerLite «Newsletter» (cuenta 1451964)
+  url_suscripcion: "https://assets.mailerlite.com/jsonp/1451964/forms/186985958894208872/subscribe"
 
 podcast:
   rss_spotify: https://anchor.fm/s/fe8af65c/podcast/rss

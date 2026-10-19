@@ -618,3 +618,10 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .codigos .codigos__lista { margin: 0; padding: 0; }
 .codigos .codigos__lista li { margin: 0; }
 .codigos .codigos__marca { color: var(--tinta); }
+
+/* newsletter: estados y texto legal */
+.nl-form__msg[data-tipo="ok"] { background: var(--lima); color: var(--sobre-lima); }
+.nl-form__msg[data-tipo="error"] { background: #FFE3DF; color: #7A1A0C; }
+.nl-form button:disabled { opacity: .7; cursor: wait; }
+.nl-form__legal { flex-basis: 100%; margin: 2px 0 0; font-size: .74rem; line-height: 1.4; opacity: .75; }
+.caja-nl .nl-form__legal { color: #E4ECF7; }

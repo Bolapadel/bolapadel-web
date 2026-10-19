@@ -21,7 +21,7 @@
 <link rel="apple-touch-icon" href="../../img/apple-touch-icon.png">
 <link rel="alternate" type="application/rss+xml" title="Bola Pádel" href="../../feed.xml">
 <link rel="stylesheet" href="../../css/fuentes.css">
-<link rel="stylesheet" href="../../css/estilos.css?v=42509374">
+<link rel="stylesheet" href="../../css/estilos.css?v=eede198a">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "PodcastEpisode", "name": "Bordeaux sorprendió | La ruptura de Leo Augsburger que nadie vio venir", "datePublished": "2026-07-08", "description": "Se jugó el Premier Padel de Burdeos y dio para hablar largo. Analizamos todo lo que pasó en la pista: los partidos, las sorpresas y lo que deja el torneo de cara a lo que viene. Pero la conversación se puso interesante cuando llegamos al bombazo de la semana: Leo Augsburger y Lisandro Borges rompen relación. ¿Qué hay detrás de esta separación entre jugador y representante? ¿Qué significa para el futuro del argentino? Lo desmenuzamos sin prisa, como nos gusta. Tertulia de pádel del bueno, sin pos", "inLanguage": "es", "url": "https://bolapadel.es/podcast/bordeaux-sorprendio-la-ruptura-de-leo-augsburger-que-nadie-vio-venir/", "partOfSeries": {"@type": "PodcastSeries", "name": "Bola Pádel Podcast", "url": "https://bolapadel.es/podcast/"}, "timeRequired": "PT62M", "associatedMedia": {"@type": "MediaObject", "contentUrl": "https://anchor.fm/s/fe8af65c/podcast/play/122568665/https%3A%2F%2Fd3ctxlq1ktw2nl.cloudfront.net%2Fstaging%2F2026-6-8%2F427602225-44100-2-a73c650c9c9e9.mp3"}, "video": {"@type": "VideoObject", "name": "Bordeaux sorprendió | La ruptura de Leo Augsburger que nadie vio venir", "embedUrl": "https://www.youtube-nocookie.com/embed/88kKK5zPvHc", "thumbnailUrl": "https://i.ytimg.com/vi/88kKK5zPvHc/maxresdefault.jpg", "uploadDate": "2026-07-08"}}</script>
 </head>
 <body>
@@ -123,11 +123,15 @@
         <h2 class="caja-nl__titulo">La newsletter de Bola Pádel</h2>
         <p>Cada semana, en tu correo: lo que ha pasado en el pádel y lo que pienso de ello.</p>
       </div>
-      <form class="nl-form" data-preview="0" data-msg="Muy pronto podrás suscribirte desde aquí.">
+      <form class="nl-form" action="https://assets.mailerlite.com/jsonp/1451964/forms/186985958894208872/subscribe" method="post" target="_blank" data-action="https://assets.mailerlite.com/jsonp/1451964/forms/186985958894208872/subscribe"      data-preview="0" data-msg="Muy pronto podrás suscribirte desde aquí."
+      data-ok="¡Dentro! Ya estás en la lista. Si te llega un correo para confirmar, ábrelo y listo." data-error="No se ha podido completar. Revisa el correo y vuelve a intentarlo en un momento." data-enviando="Apuntando…">
   <label class="vh" for="nl-episodio">Tu correo electrónico</label>
   <input id="nl-episodio" type="email" name="fields[email]" placeholder="Tu correo electrónico" required autocomplete="email">
+  <input type="hidden" name="ml-submit" value="1">
+  <input type="hidden" name="anticsrf" value="true">
   <button type="submit">Apuntarme</button>
   <p class="nl-form__msg" role="status" hidden></p>
+  <p class="nl-form__legal">Tu correo solo se usa para enviarte la newsletter de Bola Pádel (responsable: Luis González Sánchez). Lo gestiona MailerLite.</p>
 </form>
 
     </aside>
@@ -249,13 +253,32 @@
     });
   });
   document.querySelectorAll('.nl-form').forEach(function (f) {
+    var msg = f.querySelector('.nl-form__msg');
+    var boton = f.querySelector('button[type=submit]');
+    var aviso = function (texto, tipo) { msg.textContent = texto; msg.hidden = false; msg.setAttribute('data-tipo', tipo || ''); };
     f.addEventListener('submit', function (e) {
-      if (f.getAttribute('data-preview') === '1' || !f.getAttribute('action')) {
-        e.preventDefault();
-        var m = f.querySelector('.nl-form__msg');
-        m.textContent = f.getAttribute('data-msg');
-        m.hidden = false;
+      var destino = f.getAttribute('data-action');
+      if (f.getAttribute('data-preview') === '1' || !destino) {
+        e.preventDefault(); aviso(f.getAttribute('data-msg')); return;
       }
+      if (!window.fetch || !window.FormData) return; // sin JavaScript moderno: envío normal
+      e.preventDefault();
+      var datos = new FormData(f);
+      var original = boton.textContent;
+      boton.disabled = true; boton.textContent = f.getAttribute('data-enviando');
+      var fin = function (ok) {
+        boton.disabled = false; boton.textContent = original;
+        if (ok) { aviso(f.getAttribute('data-ok'), 'ok'); f.reset(); }
+        else { aviso(f.getAttribute('data-error'), 'error'); }
+      };
+      fetch(destino, { method: 'POST', body: datos })
+        .then(function (r) { return r.json(); })
+        .then(function (j) { fin(!!(j && j.success)); })
+        .catch(function () {
+          // si el navegador no deja leer la respuesta, se envía igualmente sin leerla
+          fetch(destino, { method: 'POST', body: datos, mode: 'no-cors' })
+            .then(function () { fin(true); }, function () { fin(false); });
+        });
     });
   });
 })();

@@ -47,11 +47,17 @@
 {% endmacro %}
 
 {% macro form_newsletter(id) %}
-<form class="nl-form"{% if sitio.newsletter.url_suscripcion and not preview %} action="{{ sitio.newsletter.url_suscripcion }}" method="post" target="_blank"{% endif %} data-preview="{{ '1' if preview else '0' }}" data-msg="{{ t.nl_aviso_preview if preview else t.nl_pendiente }}">
+{% set url = sitio.newsletter.url_suscripcion %}
+<form class="nl-form"{% if url and not preview %} action="{{ url }}" method="post" target="_blank" data-action="{{ url }}"{% endif %}
+      data-preview="{{ '1' if preview else '0' }}" data-msg="{{ t.nl_aviso_preview if preview else t.nl_pendiente }}"
+      data-ok="{{ t.nl_ok }}" data-error="{{ t.nl_error }}" data-enviando="{{ t.nl_enviando }}">
   <label class="vh" for="nl-{{ id }}">{{ t.tu_correo }}</label>
   <input id="nl-{{ id }}" type="email" name="fields[email]" placeholder="{{ t.tu_correo }}" required autocomplete="email">
+  <input type="hidden" name="ml-submit" value="1">
+  <input type="hidden" name="anticsrf" value="true">
   <button type="submit">{{ t.apuntarme }}</button>
   <p class="nl-form__msg" role="status" hidden></p>
+  <p class="nl-form__legal">{{ t.nl_legal }}</p>
 </form>
 {% endmacro %}
 
