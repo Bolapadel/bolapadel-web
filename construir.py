@@ -73,6 +73,9 @@ TEXTOS = {
         "aviso_youtube": "Al pulsar se carga el reproductor de YouTube.",
         "escuchalo_en": "Escúchalo en", "mas_episodios": "Más episodios", "ultimo_episodio": "Último episodio",
         "todos_episodios": "Todos los episodios", "en_espanol": "", "minutos": "min",
+        "codigos_eti": "Colaboración comercial", "codigos_titulo": "Códigos de descuento",
+        "codigos_texto": "Ahorra en tus compras de pádel con nuestros colaboradores. Copia el código y úsalo al pagar.",
+        "codigos_dto": "de descuento", "copiar_codigo": "Copiar", "codigo_copiado": "Copiado",
     },
     "en": {
         "portada": "Home", "newsletter": "Newsletter", "suscribete": "Subscribe",
@@ -103,6 +106,9 @@ TEXTOS = {
         "aviso_youtube": "Clicking loads the YouTube player.",
         "escuchalo_en": "Listen on", "mas_episodios": "More episodes", "ultimo_episodio": "Latest episode",
         "todos_episodios": "All episodes", "en_espanol": "Episodes are in Spanish.", "minutos": "min",
+        "codigos_eti": "Sponsored", "codigos_titulo": "Discount codes",
+        "codigos_texto": "Save on your padel gear with our partners. Copy the code and use it at checkout.",
+        "codigos_dto": "off", "copiar_codigo": "Copy", "codigo_copiado": "Copied",
     },
 }
 

@@ -582,3 +582,39 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .ultimo-ep__texto { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .ultimo-ep__eti { font-size: .72rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--lima-claro); }
 .ultimo-ep__titulo { font-family: var(--f-titular); font-weight: 700; font-size: 1.25rem; line-height: 1.08; }
+
+/* ---------------------------------------------------------------- códigos de descuento */
+.codigos {
+  margin-top: 2em; padding: clamp(18px, 3vw, 26px); border: 2px solid var(--lima);
+  background: var(--superficie); border-radius: var(--radio);
+  display: flex; flex-direction: column; gap: 8px; font-family: var(--f-ui);
+}
+.codigos__titulo { font-family: var(--f-titular); font-weight: 800; font-size: 1.6rem; line-height: 1; text-transform: uppercase; }
+.codigos__texto { margin: 0 0 6px; font-size: .95rem; color: var(--tinta-2); line-height: 1.45; }
+.codigos__lista { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.codigos__lista li {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 8px 16px; align-items: center;
+  padding: 10px 0; border-top: 1px solid var(--linea);
+}
+.codigos__marca { font-family: var(--f-titular); font-weight: 700; font-size: 1.2rem; color: var(--tinta); text-decoration: none; }
+.codigos__marca:hover { color: var(--enlace); text-decoration: underline; text-underline-offset: 3px; }
+.codigos__dto { font-size: .82rem; font-weight: 600; color: var(--lima-tinta); white-space: nowrap; }
+.codigos__codigo {
+  font-family: var(--f-titular); font-weight: 800; font-size: 1.05rem; letter-spacing: .06em;
+  background: var(--lima); color: var(--sobre-lima); border: 2px dashed var(--sobre-lima);
+  border-radius: var(--radio); padding: 5px 12px; cursor: pointer; white-space: nowrap;
+}
+.codigos__codigo:hover { background: var(--lima-hover); }
+.podcast-codigos { max-width: 760px; margin-bottom: clamp(26px, 4vw, 40px); }
+.podcast-codigos .codigos { margin-top: 0; }
+@media (max-width: 480px) {
+  .codigos__lista li { grid-template-columns: minmax(0, 1fr) auto; }
+  .codigos__dto { grid-column: 1; grid-row: 2; }
+  .codigos__codigo { grid-row: 1 / span 2; grid-column: 2; }
+}
+/* dentro del texto del episodio, que no hereden márgenes del cuerpo */
+.codigos .antetitulo, .codigos .codigos__titulo { margin: 0; }
+.codigos .codigos__texto { margin: 0 0 6px; font-size: .95rem; line-height: 1.45; }
+.codigos .codigos__lista { margin: 0; padding: 0; }
+.codigos .codigos__lista li { margin: 0; }
+.codigos .codigos__marca { color: var(--tinta); }

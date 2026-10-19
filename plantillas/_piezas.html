@@ -54,3 +54,22 @@
   <p class="nl-form__msg" role="status" hidden></p>
 </form>
 {% endmacro %}
+
+{% macro codigos() %}
+{% if sitio.codigos_descuento %}
+<aside class="codigos" aria-labelledby="codigos-titulo">
+  <p class="antetitulo">{{ t.codigos_eti }}</p>
+  <h2 class="codigos__titulo" id="codigos-titulo">{{ t.codigos_titulo }}</h2>
+  <p class="codigos__texto">{{ t.codigos_texto }}</p>
+  <ul class="codigos__lista">
+    {% for c in sitio.codigos_descuento %}
+    <li>
+      <a class="codigos__marca" href="{{ c.url }}" target="_blank" rel="sponsored noopener">{{ c.marca }}</a>
+      <span class="codigos__dto">{{ c.descuento }} {{ t.codigos_dto }}</span>
+      <button type="button" class="codigos__codigo" data-copiar="{{ c.codigo }}" data-ok="{{ t.codigo_copiado }} ✓" aria-label="{{ t.copiar_codigo }} {{ c.codigo }}">{{ c.codigo }}</button>
+    </li>
+    {% endfor %}
+  </ul>
+</aside>
+{% endif %}
+{% endmacro %}

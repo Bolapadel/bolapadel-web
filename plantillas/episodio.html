@@ -40,6 +40,7 @@
     <div class="cuerpo">
       {% for parrafo in ep.texto or [] %}<p>{{ parrafo }}</p>
       {% endfor %}
+      {{ p.codigos() }}
     </div>
     <aside class="noticia__lado">
       <div>
