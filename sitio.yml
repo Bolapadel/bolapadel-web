@@ -25,7 +25,7 @@ podcast:
 codigos_descuento:
   - {marca: PadelProShop, url: "https://padelproshop.com", codigo: BOLAPADEL, descuento: "10%"}
   - {marca: Acepad, url: "https://acepad.com", codigo: BOLAPADEL, descuento: "10%"}
-  - {marca: Samogrip, url: "https://samogrip.com", codigo: BOLAPADEL, descuento: "10%"}
+  - {marca: Samogrip, url: "https://samogrip.com", codigo: Bolapadel10, descuento: "10%"}
 
 textos:
   es:
