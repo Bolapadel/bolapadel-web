@@ -3,7 +3,7 @@
 
 nombre: Bola Pádel
 url: https://bolapadel.es        # dirección final de la web (sin barra al final)
-dominio: ""                      # al conectar el dominio: bolapadel.es (crea el archivo CNAME)
+dominio: bolapadel.es            # crea el archivo CNAME para GitHub Pages
 autor_por_defecto: Luis González
 
 redes:
