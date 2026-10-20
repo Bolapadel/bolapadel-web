@@ -168,10 +168,15 @@ def cargar_noticias(avisos):
         if seccion not in SECCIONES:
             sys.exit(f"[{nombre}] 'seccion' debe ser una de: {', '.join(SECCIONES)}")
         portada = datos.get("portada") or {}
+        hora = datos.get("hora") or "00:00"
+        if isinstance(hora, int):  # YAML lee 18:30 sin comillas como minutos (1110)
+            hora = f"{hora // 60:02d}:{hora % 60:02d}"
+        hora = str(hora).strip()
+        if not re.fullmatch(r"\d{1,2}:\d{2}", hora):
+            sys.exit(f"[{nombre}] 'hora' debe ser HH:MM")
         n = {
-            "archivo": nombre, "fecha": fecha, "seccion": seccion,
+            "archivo": nombre, "fecha": fecha, "hora": hora.zfill(5), "seccion": seccion,
             "autor": datos.get("autor") or None,
-            "destacada": bool(datos.get("destacada")),
             "etiquetas": datos.get("etiquetas") or [],
             "portada": {
                 "imagen": portada.get("imagen") or "",
@@ -206,8 +211,8 @@ def cargar_noticias(avisos):
                 "fecha_corta": fecha_corta(fecha, idioma),
             }
         noticias.append(n)
-    # más reciente primero; a igual fecha, por nombre de archivo inverso
-    noticias.sort(key=lambda n: (n["fecha"], n["archivo"]), reverse=True)
+    # más reciente primero: fecha, luego hora de publicación, luego nombre de archivo
+    noticias.sort(key=lambda n: (n["fecha"], n["hora"], n["archivo"]), reverse=True)
     vistos = set()
     for n in noticias:
         for idioma in IDIOMAS:
@@ -312,7 +317,8 @@ class Constructor:
         for idioma in IDIOMAS:
             vista = [self.vista(n, idioma) for n in self.noticias]
             actualidad = [v for v in vista if v["seccion"] != "opinion"]
-            destacada = next((v for v in actualidad if v["destacada"]), actualidad[0] if actualidad else None)
+            # arriba va siempre la última publicada; las demás pasan a «Lo último»
+            destacada = actualidad[0] if actualidad else None
             resto = [v for v in actualidad if v is not destacada][:6]
             opinion = [v for v in vista if v["seccion"] == "opinion"][:3]
 
@@ -372,7 +378,7 @@ class Constructor:
 
     def vista(self, n, idioma):
         v = dict(n[idioma])
-        v.update(seccion=n["seccion"], fecha=n["fecha"], destacada=n["destacada"],
+        v.update(seccion=n["seccion"], fecha=n["fecha"],
                  etiquetas=n["etiquetas"], portada=n["portada"],
                  autor=n["autor"] or self.sitio["autor_por_defecto"], _n=n)
         return v

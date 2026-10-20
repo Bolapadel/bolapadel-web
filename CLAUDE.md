@@ -12,7 +12,7 @@ Nada se publica sin el OK de Luis. Primero se le enseña la noticia redactada; s
    - `es` y `en` completos (el inglés es traducción fiel).
    - Paquete SEO siempre: `slug`, `seo_titulo` (≤60), `seo_descripcion` (120-160), `palabra_clave`.
    - Sin foto propia o con derechos → portada gráfica (`rotulo` corto + `dato`). No usar fotos de terceros.
-   - `destacada: true` solo en una noticia (la que va arriba en la portada); quitársela a la anterior.
+   - Portada: la última noticia publicada va siempre arriba y la anterior pasa a «Lo último» (decisión de Luis, 20/10). Es automático, no hay que marcar nada. Poner siempre `hora` (HH:MM, hora de publicación) para que las del mismo día se ordenen bien.
 4. `python3 construir.py` (avisa si el SEO se sale de rango).
 5. Enseñar a Luis el texto. Con su OK: `git add -A && git commit && git push`.
 
