@@ -22,7 +22,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install jinja2 markdown pyyaml
+      - run: pip install jinja2 markdown pyyaml pillow
       - run: python podcast.py
       - run: python construir.py
       - name: Guardar y publicar si hay cambios

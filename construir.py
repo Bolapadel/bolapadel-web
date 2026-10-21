@@ -373,6 +373,9 @@ class Constructor:
         self.escribir("404.html", "404.html", "es", {"es": "", "en": "en/"},
                       titulo_pagina="404", descripcion="")
         self.sitemap()
+        # tarjetas para Instagram y TikTok (docs/img/redes/<slug>-ig.jpg y -tt.jpg)
+        import redes
+        redes.generar(self.noticias, SALIDA, RAIZ / "estaticos")
         (SALIDA / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {self.absoluta('sitemap.xml')}\n")
         return self
 

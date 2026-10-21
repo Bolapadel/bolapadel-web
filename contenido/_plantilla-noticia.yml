@@ -46,3 +46,15 @@ en:
   palabra_clave: "main keyword"
   cuerpo: |
     Same text, in English.
+
+# Redes (Instagram y TikTok vía Metricool). La tarjeta se genera sola al construir:
+# https://bolapadel.es/img/redes/<slug-es>-ig.jpg (4:5) y -tt.jpg (9:16).
+redes:
+  texto: |
+    Texto corto para Instagram y TikTok, con la voz de siempre. 3-6 líneas.
+
+    La tienes entera en bolapadel.es
+
+    #padel #premierpadel
+  instagram: ""              # lo rellena Claude al programar: fecha y hora
+  tiktok: ""
