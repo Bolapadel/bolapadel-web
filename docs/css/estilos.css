@@ -456,6 +456,9 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   margin: 1.6em 0; padding: 0 0 0 1.1em; border-left: 4px solid var(--lima);
   font-style: italic; font-size: 1.4rem; line-height: 1.4;
 }
+.cuerpo figure { margin: 1.8em 0 2em; }
+.cuerpo figure img { width: 100%; height: auto; border-radius: var(--radio); }
+.cuerpo figcaption { font-family: var(--f-ui); font-size: .8rem; color: var(--gris); margin-top: .55em; }
 .cuerpo__firma { font-family: var(--f-ui); font-size: .95rem; font-weight: 600; color: var(--gris); margin-top: 2em; }
 
 .tabla { overflow-x: auto; margin: 1.5em 0 1.8em; -webkit-overflow-scrolling: touch; }
