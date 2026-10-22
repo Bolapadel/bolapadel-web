@@ -32,6 +32,10 @@ Nada se publica sin el OK de Luis. Primero se le enseña la noticia redactada; s
 - Con el OK y la web ya subida: como imagen usar `https://raw.githubusercontent.com/Bolapadel/bolapadel-web/main/docs/img/redes/<slug>-ig.jpg` (disponible nada más hacer push y comprobable con curl; bolapadel.es no se alcanza desde el espacio de trabajo; Metricool copia la imagen a su servidor), pedir a Metricool `getBestTimeToPostByNetwork` (marca 5619697, Europe/Madrid) para instagram y tiktok desde ahora hasta fin del día (si es tarde, el día siguiente) y programar con `createScheduledPost` **dos publicaciones**: una de Instagram (POST, media = tarjeta -ig) y otra de TikTok (media = tarjeta -tt). Apuntar fecha y hora en `redes.instagram` / `redes.tiktok` del YAML.
 - Carrusel (si Luis pide varias imágenes en el mismo post, en vez de la tarjeta): preparar las diapositivas en `estaticos/img/redes/<slug>-1-ig.jpg`, `-2-ig.jpg`… (1080x1350) y `-1-tt.jpg`, `-2-tt.jpg`… (1080x1920, imagen con margen para la interfaz de TikTok); al construir se copian a `docs/img/redes/`. En Metricool se pasan todas en `media`, en el orden del carrusel (TikTok: `photoCoverIndex` 0 y un `title`).
 
+## Publicidad
+- Banner encima de la noticia principal de la portada (ES y EN), decisión de Luis 22/10: se configura en `sitio.yml` → `publicidad.portada` (activo, marca, enlace, imagen 1200x300, imagen_movil, alt). Imágenes en `estaticos/img/publicidad/`. Siempre con la etiqueta «Publicidad» y `rel="sponsored"`.
+- Anunciante actual: PadelPROShop (código BOLAPADEL, 10 %). La versión móvil es un recorte del banner (logo + código) para que se lea.
+
 ## Podcast
 - Los episodios salen solos: `.github/workflows/podcast.yml` ejecuta `podcast.py` dos veces al día, lee el RSS de Spotify for Creators y el de YouTube (datos en `sitio.yml`), los une por título/número/fecha y guarda `contenido/podcast/episodios.json`. Luego construye y publica.
 - Los clips y shorts (< 20 min) no entran. Para ocultar un episodio: `"oculto": true` en el JSON.
