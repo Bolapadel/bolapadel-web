@@ -21,6 +21,18 @@ podcast:
     - {nombre: Spotify, url: "https://podcasters.spotify.com/pod/show/bola-pdel"}
     - {nombre: YouTube, url: "https://www.youtube.com/@Bolapadel"}
 
+# Banner de publicidad encima de la noticia principal de la portada.
+# Para cambiar de anunciante: nueva imagen en estaticos/img/publicidad/ (1200x300 y, si hay, versión móvil)
+# y cambiar marca/enlace/alt. Para quitarlo: activo: false.
+publicidad:
+  portada:
+    activo: true
+    marca: PadelPROShop
+    enlace: "https://padelproshop.com"
+    imagen: img/publicidad/padelproshop.jpg            # 1200x300
+    imagen_movil: img/publicidad/padelproshop-movil.jpg  # 770x300 (logo + código, se lee en el móvil)
+    alt: "PadelPROShop: código BOLAPADEL, 10 % de descuento"
+
 # Códigos de descuento de los patrocinadores (salen en el podcast).
 # Para cambiar un código o añadir una marca, edita esta lista.
 codigos_descuento:

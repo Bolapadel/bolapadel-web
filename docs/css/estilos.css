@@ -259,6 +259,17 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 }
 
 /* ---------------------------------------------------------------- noticia destacada */
+/* banner de publicidad (portada) */
+.publi { padding-top: clamp(16px, 3vw, 28px); }
+.publi__eti {
+  margin: 0 0 6px; font-family: var(--f-ui); font-size: .68rem; font-weight: 600;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--gris);
+}
+.publi__enlace { display: block; line-height: 0; border-radius: 10px; overflow: hidden; }
+.publi__enlace img { display: block; width: 100%; height: auto; }
+.publi__enlace:focus-visible { outline: 3px solid var(--lima); outline-offset: 3px; }
+.publi + .destacada { padding-top: clamp(18px, 3vw, 32px); }
+
 .destacada { padding-block: clamp(24px, 4.5vw, 52px); }
 .destacada__in {
   display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
