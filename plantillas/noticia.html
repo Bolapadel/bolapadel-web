@@ -27,9 +27,16 @@
 
   <div class="envoltura noticia__rejilla">
     <div class="cuerpo">
+      {% set pub = sitio.publicidad or {} %}
+      {% if n.cuerpo_partes and pub.noticias_texto %}
+      {{ n.cuerpo_partes[0]|safe }}
+      {{ p.publi('publi--texto', pub.noticias_texto) }}
+      {{ n.cuerpo_partes[1]|safe }}
+      {% else %}
       {{ n.cuerpo_html|safe }}
+      {% endif %}
       <p class="cuerpo__firma">— {{ n.autor }}</p>
-      {% if sitio.publicidad and sitio.publicidad.noticias %}{{ p.publi('publi--noticia') }}{% endif %}
+      {% if pub.noticias_final %}{{ p.publi('publi--noticia', pub.noticias_final) }}{% endif %}
     </div>
     <aside class="noticia__lado">
       {% if n.etiquetas %}

@@ -21,13 +21,14 @@ podcast:
     - {nombre: Spotify, url: "https://podcasters.spotify.com/pod/show/bola-pdel"}
     - {nombre: YouTube, url: "https://www.youtube.com/@Bolapadel"}
 
-# Publicidad. Portada: cada hueco lleva un anunciante fijo. Noticias: se alternan al azar.
+# Publicidad. Cada hueco lleva un anunciante fijo (la marca, tal como está en la lista).
 # Para añadir un anunciante: imagen 1200x300 (y versión móvil 770x300) en estaticos/img/publicidad/
 # y una entrada más en la lista. Para quitar uno sin borrarlo: activo: false.
 publicidad:
   portada_arriba: PadelPROShop   # fijo encima de la noticia principal (marca de la lista; vacío = ninguno)
   portada_abajo: Samogrip        # fijo debajo de «Lo último» (vacío = ninguno)
-  noticias: true                 # al final de cada noticia, uno de la lista al azar
+  noticias_texto: PadelPROShop   # dentro de cada noticia (antes del primer subtítulo o tras el 3.er párrafo)
+  noticias_final: Samogrip       # al final de cada noticia (las de menos de 4 párrafos solo llevan este)
   banners:
     - marca: PadelPROShop
       enlace: "https://padelproshop.com"

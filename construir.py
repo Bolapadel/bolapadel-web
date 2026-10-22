@@ -150,6 +150,32 @@ def a_html(texto_md):
     return html
 
 
+def partir_cuerpo(html):
+    """Punto del texto donde va el banner de dentro de la noticia.
+
+    Antes del primer subtítulo si hay entre 2 y 5 párrafos delante; si no, después del
+    tercer párrafo. Noticias de menos de 4 párrafos: no se parten (devuelve None).
+    Solo cuenta párrafos de primer nivel (no los de citas).
+    """
+    parrafos, profundidad, i = [], 0, 0
+    for m in re.finditer(r"<(/?)(blockquote|p|h2)\b[^>]*>", html):
+        cierre, etiqueta = m.group(1) == "/", m.group(2)
+        if etiqueta == "blockquote":
+            profundidad += -1 if cierre else 1
+        elif profundidad == 0 and etiqueta == "p" and cierre:
+            parrafos.append(m.end())
+        elif profundidad == 0 and etiqueta == "h2" and not cierre and i == 0:
+            i = m.start()
+            antes_h2 = len(parrafos)
+    if len(parrafos) < 4:
+        return None
+    if i and 2 <= antes_h2 <= 5:
+        corte = i
+    else:
+        corte = parrafos[2]
+    return html[:corte], html[corte:]
+
+
 def minutos_lectura(texto):
     palabras = len(re.findall(r"\w+", texto))
     return max(1, math.ceil(palabras / 200))
@@ -205,6 +231,7 @@ def cargar_noticias(avisos):
             n[idioma] = {
                 **{c: bloque[c].strip() for c in CAMPOS_IDIOMA if c != "cuerpo"},
                 "cuerpo_html": a_html(cuerpo),
+                "cuerpo_partes": partir_cuerpo(a_html(cuerpo)),
                 "minutos": minutos_lectura(cuerpo),
                 "url": f"{url_seccion(seccion, idioma)}{slug}/",
                 "seccion_nombre": SECCIONES[seccion][idioma][1],
