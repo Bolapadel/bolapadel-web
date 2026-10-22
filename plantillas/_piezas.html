@@ -79,3 +79,19 @@
 </aside>
 {% endif %}
 {% endmacro %}
+
+{# Banner de publicidad: si hay varios, cada visita ve uno al azar (sin JavaScript, el primero). #}
+{% macro publi(clase='') %}
+{% set lista = (sitio.publicidad.banners if sitio.publicidad and sitio.publicidad.banners else []) | selectattr('activo', 'ne', false) | list %}
+{% if lista %}
+<div class="publi {{ clase }}">
+  <p class="publi__eti">{{ t.publicidad }}</p>
+  {% for b in lista %}
+  <a class="publi__enlace" href="{{ b.enlace }}" target="_blank" rel="sponsored noopener" data-publi{% if not loop.first %} hidden{% endif %}>
+    <picture>{% if b.imagen_movil %}<source media="(max-width: 640px)" srcset="{{ rel(b.imagen_movil) }}" width="770" height="300">{% endif %}<img src="{{ rel(b.imagen) }}" alt="{{ b.alt }}" width="1200" height="300" loading="lazy"></picture>
+  </a>
+  {% endfor %}
+  {% if lista|length > 1 %}<script>(function(g){var a=g.querySelectorAll('[data-publi]'),i=Math.floor(Math.random()*a.length);for(var k=0;k<a.length;k++)a[k].hidden=k!==i;})(document.currentScript.parentNode);</script>{% endif %}
+</div>
+{% endif %}
+{% endmacro %}

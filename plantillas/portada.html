@@ -1,18 +1,7 @@
 {% extends "base.html" %}
 {% import "_piezas.html" as p with context %}
 {% block contenido %}
-{% set publi = sitio.publicidad.portada if sitio.publicidad and sitio.publicidad.portada else none %}
-{% if publi and publi.activo %}
-<div class="envoltura publi">
-  <p class="publi__eti">{{ t.publicidad }}</p>
-  <a class="publi__enlace" href="{{ publi.enlace }}" target="_blank" rel="sponsored noopener">
-    <picture>
-      {% if publi.imagen_movil %}<source media="(max-width: 640px)" srcset="{{ rel(publi.imagen_movil) }}" width="770" height="300">{% endif %}
-      <img src="{{ rel(publi.imagen) }}" alt="{{ publi.alt }}" width="1200" height="300">
-    </picture>
-  </a>
-</div>
-{% endif %}
+{% if sitio.publicidad and sitio.publicidad.portada %}{{ p.publi('envoltura publi--portada') }}{% endif %}
 {% if destacada %}
 <section class="destacada">
   <div class="envoltura destacada__in">

@@ -29,6 +29,7 @@
     <div class="cuerpo">
       {{ n.cuerpo_html|safe }}
       <p class="cuerpo__firma">— {{ n.autor }}</p>
+      {% if sitio.publicidad and sitio.publicidad.noticias %}{{ p.publi('publi--noticia') }}{% endif %}
     </div>
     <aside class="noticia__lado">
       {% if n.etiquetas %}

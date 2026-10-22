@@ -21,17 +21,24 @@ podcast:
     - {nombre: Spotify, url: "https://podcasters.spotify.com/pod/show/bola-pdel"}
     - {nombre: YouTube, url: "https://www.youtube.com/@Bolapadel"}
 
-# Banner de publicidad encima de la noticia principal de la portada.
-# Para cambiar de anunciante: nueva imagen en estaticos/img/publicidad/ (1200x300 y, si hay, versión móvil)
-# y cambiar marca/enlace/alt. Para quitarlo: activo: false.
+# Publicidad. Los banners de la lista se alternan al azar en cada visita.
+# Sitios: arriba de la portada (portada: true) y al final de cada noticia (noticias: true).
+# Para añadir un anunciante: imagen 1200x300 (y versión móvil 770x300) en estaticos/img/publicidad/
+# y una entrada más en la lista. Para quitar uno sin borrarlo: activo: false.
 publicidad:
-  portada:
-    activo: true
-    marca: PadelPROShop
-    enlace: "https://padelproshop.com"
-    imagen: img/publicidad/padelproshop.jpg            # 1200x300
-    imagen_movil: img/publicidad/padelproshop-movil.jpg  # 770x300 (logo + código, se lee en el móvil)
-    alt: "PadelPROShop: código BOLAPADEL, 10 % de descuento"
+  portada: true
+  noticias: true
+  banners:
+    - marca: PadelPROShop
+      enlace: "https://padelproshop.com"
+      imagen: img/publicidad/padelproshop.jpg
+      imagen_movil: img/publicidad/padelproshop-movil.jpg
+      alt: "PadelPROShop: código BOLAPADEL, 10 % de descuento"
+    - marca: Samogrip
+      enlace: "https://samogrip.com"
+      imagen: img/publicidad/samogrip.jpg
+      imagen_movil: img/publicidad/samogrip-movil.jpg
+      alt: "Samogrip: código BOLAPADEL10, 10 % de descuento"
 
 # Códigos de descuento de los patrocinadores (salen en el podcast).
 # Para cambiar un código o añadir una marca, edita esta lista.
