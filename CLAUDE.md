@@ -33,8 +33,9 @@ Nada se publica sin el OK de Luis. Primero se le enseña la noticia redactada; s
 - Carrusel (si Luis pide varias imágenes en el mismo post, en vez de la tarjeta): preparar las diapositivas en `estaticos/img/redes/<slug>-1-ig.jpg`, `-2-ig.jpg`… (1080x1350) y `-1-tt.jpg`, `-2-tt.jpg`… (1080x1920, imagen con margen para la interfaz de TikTok); al construir se copian a `docs/img/redes/`. En Metricool se pasan todas en `media`, en el orden del carrusel (TikTok: `photoCoverIndex` 0 y un `title`).
 
 ## Publicidad
-- Banner encima de la noticia principal de la portada (ES y EN), decisión de Luis 22/10: se configura en `sitio.yml` → `publicidad.portada` (activo, marca, enlace, imagen 1200x300, imagen_movil, alt). Imágenes en `estaticos/img/publicidad/`. Siempre con la etiqueta «Publicidad» y `rel="sponsored"`.
-- Anunciante actual: PadelPROShop (código BOLAPADEL, 10 %). La versión móvil es un recorte del banner (logo + código) para que se lea.
+- Decisión de Luis (22/10): en la **portada**, PadelPROShop fijo encima de la noticia principal y Samogrip fijo debajo de «Lo último»; al **final de cada noticia**, uno de los anunciantes al azar en cada visita.
+- Todo se configura en `sitio.yml` → `publicidad` (`portada_arriba`, `portada_abajo`, `noticias` y la lista `banners` con marca, enlace, imagen 1200x300, imagen_movil 770x300 y alt). Imágenes en `estaticos/img/publicidad/`. Siempre con la etiqueta «Publicidad» y `rel="sponsored"`.
+- Las versiones móviles son la parte del banner con el logo y el código, para que se lea. El banner de Samogrip lo rediseñó Claude a partir del de Luis (fondo kraft, cupón BOLAPADEL10).
 
 ## Podcast
 - Los episodios salen solos: `.github/workflows/podcast.yml` ejecuta `podcast.py` dos veces al día, lee el RSS de Spotify for Creators y el de YouTube (datos en `sitio.yml`), los une por título/número/fecha y guarda `contenido/podcast/episodios.json`. Luego construye y publica.

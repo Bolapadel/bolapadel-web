@@ -80,9 +80,10 @@
 {% endif %}
 {% endmacro %}
 
-{# Banner de publicidad: si hay varios, cada visita ve uno al azar (sin JavaScript, el primero). #}
-{% macro publi(clase='') %}
+{# Banner de publicidad. Con «marca», solo ese anunciante; sin ella, uno de la lista al azar en cada visita (sin JavaScript, el primero). #}
+{% macro publi(clase='', marca='') %}
 {% set lista = (sitio.publicidad.banners if sitio.publicidad and sitio.publicidad.banners else []) | selectattr('activo', 'ne', false) | list %}
+{% if marca %}{% set lista = lista | selectattr('marca', 'equalto', marca) | list %}{% endif %}
 {% if lista %}
 <div class="publi {{ clase }}">
   <p class="publi__eti">{{ t.publicidad }}</p>

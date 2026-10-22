@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% import "_piezas.html" as p with context %}
 {% block contenido %}
-{% if sitio.publicidad and sitio.publicidad.portada %}{{ p.publi('envoltura publi--portada') }}{% endif %}
+{% if sitio.publicidad and sitio.publicidad.portada_arriba %}{{ p.publi('envoltura publi--portada', sitio.publicidad.portada_arriba) }}{% endif %}
 {% if destacada %}
 <section class="destacada">
   <div class="envoltura destacada__in">
@@ -29,6 +29,8 @@
   </div>
 </section>
 {% endif %}
+
+{% if sitio.publicidad and sitio.publicidad.portada_abajo %}{{ p.publi('envoltura publi--portada-abajo', sitio.publicidad.portada_abajo) }}{% endif %}
 
 {% if opinion %}
 <section class="opinion">
