@@ -33,8 +33,8 @@ Nada se publica sin el OK de Luis. Primero se le enseña la noticia redactada; s
 - Carrusel (si Luis pide varias imágenes en el mismo post, en vez de la tarjeta): preparar las diapositivas en `estaticos/img/redes/<slug>-1-ig.jpg`, `-2-ig.jpg`… (1080x1350) y `-1-tt.jpg`, `-2-tt.jpg`… (1080x1920, imagen con margen para la interfaz de TikTok); al construir se copian a `docs/img/redes/`. En Metricool se pasan todas en `media`, en el orden del carrusel (TikTok: `photoCoverIndex` 0 y un `title`).
 
 ## Publicidad
-- Decisión de Luis (22/10): en la **portada**, PadelPROShop fijo encima de la noticia principal y Samogrip fijo debajo de «Lo último». En **cada noticia**, PadelPROShop dentro del texto (antes del primer subtítulo si hay 2-5 párrafos delante; si no, tras el 3.er párrafo; `partir_cuerpo` en construir.py) y Samogrip al final, tras la firma. Noticias de menos de 4 párrafos: solo el del final.
-- Todo se configura en `sitio.yml` → `publicidad` (`portada_arriba`, `portada_abajo`, `noticias_texto`, `noticias_final` y la lista `banners` con marca, enlace, imagen 1200x300, imagen_movil 770x300 y alt). Imágenes en `estaticos/img/publicidad/`. Siempre con la etiqueta «Publicidad» y `rel="sponsored"`.
+- Decisión de Luis (22/10): en la **portada**, PadelPROShop fijo encima de la noticia principal y Samogrip fijo debajo de «Lo último». En **cada noticia**, PadelPROShop justo después del texto (tras la firma) y Samogrip después del recuadro de la newsletter. **Nunca publicidad en medio del texto** (Luis, 22/10).
+- Todo se configura en `sitio.yml` → `publicidad` (`portada_arriba`, `portada_abajo`, `noticias_final`, `noticias_abajo` y la lista `banners` con marca, enlace, imagen 1200x300, imagen_movil 770x300 y alt). Imágenes en `estaticos/img/publicidad/`. Siempre con la etiqueta «Publicidad» y `rel="sponsored"`.
 - Las versiones móviles son la parte del banner con el logo y el código, para que se lea. El banner de Samogrip lo rediseñó Claude a partir del de Luis (fondo kraft, cupón BOLAPADEL10).
 
 ## Podcast

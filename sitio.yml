@@ -27,8 +27,8 @@ podcast:
 publicidad:
   portada_arriba: PadelPROShop   # fijo encima de la noticia principal (marca de la lista; vacío = ninguno)
   portada_abajo: Samogrip        # fijo debajo de «Lo último» (vacío = ninguno)
-  noticias_texto: PadelPROShop   # dentro de cada noticia (antes del primer subtítulo o tras el 3.er párrafo)
-  noticias_final: Samogrip       # al final de cada noticia (las de menos de 4 párrafos solo llevan este)
+  noticias_final: PadelPROShop   # en cada noticia, justo después del texto (tras la firma)
+  noticias_abajo: Samogrip       # en cada noticia, después del recuadro de la newsletter
   banners:
     - marca: PadelPROShop
       enlace: "https://padelproshop.com"
