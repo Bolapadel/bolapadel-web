@@ -24,7 +24,7 @@
   <a class="tarjeta__enlace" href="{{ rel(n.url) }}">
     {{ portada(n, 's') }}
     <div class="tarjeta__texto">
-      <p class="antetitulo">{{ n.seccion_nombre }} · <time datetime="{{ n.fecha.isoformat() }}">{{ n.fecha_corta }}</time>{% if n.duracion %} · {{ n.duracion }}{% endif %}</p>
+      <p class="antetitulo">{{ n.seccion_nombre }} · <time datetime="{{ n.publicado or n.fecha.isoformat() }}">{{ n.fecha_corta }}</time>{% if n.duracion %} · {{ n.duracion }}{% endif %}</p>
       <h3 class="tarjeta__titulo">{{ n.titulo }}</h3>
       <p class="tarjeta__entradilla">{{ n.entradilla }}</p>
     </div>
@@ -38,7 +38,7 @@
 <article class="columna{% if not grande %} columna--lista{% endif %}">
   <span class="iniciales" aria-hidden="true">{{ iniciales(n.autor) }}</span>
   <div class="columna__texto">
-    <p class="antetitulo">{{ n.autor }} · <time datetime="{{ n.fecha.isoformat() }}">{{ n.fecha_corta }}</time></p>
+    <p class="antetitulo">{{ n.autor }} · <time datetime="{{ n.publicado or n.fecha.isoformat() }}">{{ n.fecha_corta }}</time></p>
     <h3 class="columna__titulo"><a href="{{ rel(n.url) }}">{{ n.titulo }}</a></h3>
     <p class="columna__entradilla">{{ n.entradilla }}</p>
     <a class="enlace-flecha" href="{{ rel(n.url) }}">{{ t.leer_columna }}</a>

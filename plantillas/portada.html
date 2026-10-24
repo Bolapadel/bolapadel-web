@@ -10,7 +10,7 @@
       <p class="antetitulo"><a href="{{ rel(destacada.seccion_url) }}">{{ destacada.seccion_nombre }}</a>{% if destacada.etiquetas %} · {{ destacada.etiquetas[0] }}{% endif %}</p>
       <h1 class="destacada__titulo"><a href="{{ rel(destacada.url) }}">{{ destacada.titulo }}</a></h1>
       <p class="entradilla">{{ destacada.entradilla }}</p>
-      <p class="firma">{{ t.por }} <strong>{{ destacada.autor }}</strong> · <time datetime="{{ destacada.fecha.isoformat() }}">{{ destacada.fecha_larga }}</time></p>
+      <p class="firma">{{ t.por }} <strong>{{ destacada.autor }}</strong> · <time datetime="{{ destacada.publicado }}">{{ destacada.fecha_larga }}</time></p>
     </div>
   </div>
 </section>

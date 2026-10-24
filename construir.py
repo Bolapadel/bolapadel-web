@@ -18,8 +18,15 @@ import os
 import re
 import shutil
 import sys
+from email.utils import format_datetime
 from pathlib import Path
 from xml.sax.saxutils import escape as xml_escape
+
+try:
+    from zoneinfo import ZoneInfo
+    ZONA = ZoneInfo("Europe/Madrid")
+except Exception:  # sin base de datos de zonas horarias: se calcula a mano (ver momento_publicacion)
+    ZONA = None
 
 import markdown
 import yaml
@@ -156,6 +163,22 @@ def minutos_lectura(texto):
 
 
 # ---------------------------------------------------------------- contenido
+def momento_publicacion(fecha, hora):
+    """Fecha y hora de publicación en hora de Madrid.
+    Solo va en los datos para Google (JSON-LD, sitemaps, RSS, atributos datetime):
+    el lector nunca ve la hora (decisión de Luis, 24/10)."""
+    h, m = (int(x) for x in hora.split(":"))
+    local = dt.datetime.combine(fecha, dt.time(h, m))
+    if ZONA:
+        return local.replace(tzinfo=ZONA)
+
+    def ultimo_domingo(ano, mes):
+        d = dt.date(ano, mes, 31)
+        return d - dt.timedelta(days=(d.weekday() + 1) % 7)
+    verano = ultimo_domingo(fecha.year, 3) <= fecha < ultimo_domingo(fecha.year, 10)
+    return local.replace(tzinfo=dt.timezone(dt.timedelta(hours=2 if verano else 1)))
+
+
 def cargar_noticias(avisos):
     noticias = []
     for ruta in sorted((RAIZ / "contenido" / "noticias").glob("*.yml")):
@@ -170,14 +193,19 @@ def cargar_noticias(avisos):
         if seccion not in SECCIONES:
             sys.exit(f"[{nombre}] 'seccion' debe ser una de: {', '.join(SECCIONES)}")
         portada = datos.get("portada") or {}
+        tiene_hora = bool(datos.get("hora"))
         hora = datos.get("hora") or "00:00"
         if isinstance(hora, int):  # YAML lee 18:30 sin comillas como minutos (1110)
             hora = f"{hora // 60:02d}:{hora % 60:02d}"
         hora = str(hora).strip()
         if not re.fullmatch(r"\d{1,2}:\d{2}", hora):
             sys.exit(f"[{nombre}] 'hora' debe ser HH:MM")
+        # sin 'hora' (noticias antiguas) no se inventa: solo el día
+        momento = momento_publicacion(fecha, hora) if tiene_hora else None
         n = {
             "archivo": nombre, "fecha": fecha, "hora": hora.zfill(5), "seccion": seccion,
+            "publicado": momento.isoformat() if momento else fecha.isoformat(),
+            "publicado_dt": momento,
             "autor": datos.get("autor") or None,
             "etiquetas": datos.get("etiquetas") or [],
             "portada": {
@@ -278,8 +306,9 @@ class Constructor:
     def absoluta(self, ruta):
         return f"{self.sitio['url']}/{ruta}"
 
-    def escribir(self, ruta, plantilla, idioma, alternos, **ctx):
-        """ruta: carpeta de la página ('' = raíz) o archivo .html"""
+    def escribir(self, ruta, plantilla, idioma, alternos, lastmod=None, **ctx):
+        """ruta: carpeta de la página ('' = raíz) o archivo .html
+        lastmod: fecha (o fecha y hora) de su último cambio, para el sitemap"""
         es_archivo = ruta.endswith(".html")
         carpeta = str(Path(ruta).parent) if es_archivo else ruta.rstrip("/")
         carpeta = "" if carpeta == "." else carpeta
@@ -306,7 +335,7 @@ class Constructor:
         destino.parent.mkdir(parents=True, exist_ok=True)
         destino.write_text(html, encoding="utf-8")
         if not es_archivo:
-            self.paginas.append((ruta, alternos))
+            self.paginas.append((ruta, alternos, lastmod))
 
     def construir(self):
         if SALIDA.exists():
@@ -325,10 +354,17 @@ class Constructor:
             opinion = [v for v in vista if v["seccion"] == "opinion"][:3]
 
             episodios = [self.vista_episodio(e, idioma) for e in self.episodios]
+            ultimo = {  # último cambio de cada página de sección, para el sitemap
+                "actualidad": actualidad[0]["publicado"] if actualidad else None,
+                "opinion": opinion[0]["publicado"] if opinion else None,
+                "podcast": episodios[0]["fecha"].isoformat() if episodios else None,
+            }
 
             # portada
             self.escribir(PREFIJO[idioma], "portada.html", idioma,
                           {i: PREFIJO[i] for i in IDIOMAS},
+                          lastmod=max([x for x in ultimo.values() if x], default=None,
+                                      key=lambda x: x[:10]),
                           destacada=destacada, resto=resto, opinion=opinion,
                           ultimo_episodio=episodios[0] if episodios else None,
                           titulo_pagina=None, descripcion=self.sitio["textos"][idioma]["descripcion"])
@@ -338,6 +374,7 @@ class Constructor:
                 lista = episodios if clave == "podcast" else [v for v in vista if v["seccion"] == clave]
                 self.escribir(url_seccion(clave, idioma), "seccion.html", idioma,
                               {i: url_seccion(clave, i) for i in IDIOMAS},
+                              lastmod=ultimo.get(clave),
                               clave=clave, nombre=SECCIONES[clave][idioma][1], lista=lista,
                               descripcion_seccion=(TEXTOS[idioma]["secciones_desc"][clave]
                                                    or self.sitio["textos"][idioma]["podcast"]),
@@ -356,6 +393,7 @@ class Constructor:
                 relacionadas = [x for x in vista if x is not v][:3]
                 self.escribir(v["url"], "noticia.html", idioma,
                               {i: n[i]["url"] for i in IDIOMAS},
+                              lastmod=v["publicado"],
                               n=v, relacionadas=relacionadas,
                               titulo_pagina=v["seo_titulo"], descripcion=v["seo_descripcion"],
                               json_ld=self.json_ld(v, idioma))
@@ -365,6 +403,7 @@ class Constructor:
                 for k, ep in enumerate(episodios):
                     otros = [x for x in episodios if x is not ep][:3]
                     self.escribir(ep["url"], "episodio.html", "es", {"es": ep["url"]},
+                                  lastmod=ep["fecha"].isoformat(),
                                   ep=ep, otros=otros, titulo_pagina=ep["titulo"],
                                   descripcion=(ep["entradilla"] or self.sitio["textos"]["es"]["podcast"])[:160],
                                   json_ld=self.json_ld_episodio(ep))
@@ -375,15 +414,17 @@ class Constructor:
         self.escribir("404.html", "404.html", "es", {"es": "", "en": "en/"},
                       titulo_pagina="404", descripcion="")
         self.sitemap()
+        self.sitemap_noticias()
         # tarjetas para Instagram y TikTok (docs/img/redes/<slug>-ig.jpg y -tt.jpg)
         import redes
         redes.generar(self.noticias, SALIDA, RAIZ / "estaticos")
-        (SALIDA / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {self.absoluta('sitemap.xml')}\n")
+        (SALIDA / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {self.absoluta('sitemap.xml')}\n"
+                                           f"Sitemap: {self.absoluta('sitemap-noticias.xml')}\n")
         return self
 
     def vista(self, n, idioma):
         v = dict(n[idioma])
-        v.update(seccion=n["seccion"], fecha=n["fecha"],
+        v.update(seccion=n["seccion"], fecha=n["fecha"], publicado=n["publicado"],
                  etiquetas=n["etiquetas"], portada=n["portada"],
                  autor=n["autor"] or self.sitio["autor_por_defecto"], _n=n)
         return v
@@ -437,8 +478,8 @@ class Constructor:
             "headline": v["titulo"],
             "description": v["seo_descripcion"],
             "inLanguage": idioma,
-            "datePublished": v["fecha"].isoformat(),
-            "dateModified": v["fecha"].isoformat(),
+            "datePublished": v["publicado"],
+            "dateModified": v["publicado"],
             "author": {"@type": "Person", "name": v["autor"]},
             "publisher": {"@type": "Organization", "name": self.sitio["nombre"],
                           "logo": {"@type": "ImageObject", "url": self.absoluta("img/logo.png")}},
@@ -452,7 +493,11 @@ class Constructor:
         items = []
         for v in vista[:30]:
             enlace = self.absoluta(v["url"])
-            fecha = dt.datetime.combine(v["fecha"], dt.time(9, 0)).strftime("%a, %d %b %Y %H:%M:%S +0000")
+            momento = v["_n"]["publicado_dt"]
+            if momento:
+                fecha = format_datetime(momento)
+            else:
+                fecha = dt.datetime.combine(v["fecha"], dt.time(9, 0)).strftime("%a, %d %b %Y %H:%M:%S +0000")
             items.append(
                 f"<item><title>{xml_escape(v['titulo'])}</title><link>{enlace}</link>"
                 f"<guid>{enlace}</guid><pubDate>{fecha}</pubDate>"
@@ -468,14 +513,39 @@ class Constructor:
 
     def sitemap(self):
         filas = []
-        for ruta, alternos in self.paginas:
+        for ruta, alternos, lastmod in self.paginas:
             alt = "".join(f'<xhtml:link rel="alternate" hreflang="{i}" href="{self.absoluta(u)}"/>'
                           for i, u in alternos.items())
-            filas.append(f"<url><loc>{self.absoluta(ruta)}</loc>{alt}</url>")
+            mod = f"<lastmod>{lastmod}</lastmod>" if lastmod else ""
+            filas.append(f"<url><loc>{self.absoluta(ruta)}</loc>{mod}{alt}</url>")
         (SALIDA / "sitemap.xml").write_text(
             '<?xml version="1.0" encoding="UTF-8"?>\n'
             '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
             'xmlns:xhtml="http://www.w3.org/1999/xhtml">' + "".join(filas) + "</urlset>\n",
+            encoding="utf-8")
+
+    def sitemap_noticias(self):
+        """Sitemap de noticias (formato de Google News): las publicadas en las 48 horas
+        anteriores a la última noticia. Se calcula sobre la última noticia y no sobre la
+        hora de construcción para que la web no cambie sola cada vez que se construye."""
+        con_hora = [n for n in self.noticias if n["publicado_dt"]]
+        filas = []
+        if con_hora:
+            ultima = max(n["publicado_dt"] for n in con_hora)
+            recientes = [n for n in con_hora if ultima - n["publicado_dt"] <= dt.timedelta(hours=48)]
+            for n in recientes:
+                for idioma in IDIOMAS:
+                    filas.append(
+                        f"<url><loc>{self.absoluta(n[idioma]['url'])}</loc><news:news>"
+                        f"<news:publication><news:name>{xml_escape(self.sitio['nombre'])}</news:name>"
+                        f"<news:language>{idioma}</news:language></news:publication>"
+                        f"<news:publication_date>{n['publicado']}</news:publication_date>"
+                        f"<news:title>{xml_escape(n[idioma]['titulo'])}</news:title>"
+                        f"</news:news></url>")
+        (SALIDA / "sitemap-noticias.xml").write_text(
+            '<?xml version="1.0" encoding="UTF-8"?>\n'
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
+            'xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">' + "".join(filas) + "</urlset>\n",
             encoding="utf-8")
 
 

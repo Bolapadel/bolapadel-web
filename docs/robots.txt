@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://bolapadel.es/sitemap.xml
+Sitemap: https://bolapadel.es/sitemap-noticias.xml

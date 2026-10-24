@@ -13,8 +13,14 @@ Nada se publica sin el OK de Luis. Primero se le enseña la noticia redactada; s
    - Paquete SEO siempre: `slug`, `seo_titulo` (≤60), `seo_descripcion` (120-160), `palabra_clave`.
    - Sin foto propia o con derechos → portada gráfica (`rotulo` corto + `dato`). No usar fotos de terceros.
    - Portada: la última noticia publicada va siempre arriba y la anterior pasa a «Lo último» (decisión de Luis, 20/10). Es automático, no hay que marcar nada. Poner siempre `hora` (HH:MM, hora de publicación) para que las del mismo día se ordenen bien.
+   - La `hora` también va, escondida, en los datos para Google: JSON-LD (`datePublished`), `article:published_time`, atributos `datetime`, `lastmod` del sitemap, `sitemap-noticias.xml` y RSS, con la zona de Madrid. **El lector nunca ve la hora** (Luis, 24/10): en la página solo sale el día.
 4. `python3 construir.py` (avisa si el SEO se sale de rango).
 5. Enseñar a Luis el texto. Con su OK: `git add -A && git commit && git push`.
+6. Tras el push, darle a Luis el enlace (pulsable) para pedir a Google que la lea: `https://search.google.com/search-console/inspect?resource_id=sc-domain%3Abolapadel.es&id=<URL de la noticia codificada>` → «Solicitar indexación». Google tarda horas en recoger una noticia nueva; la web es nueva y aún no tiene fuerza en Google.
+
+## Google
+- `sitemap.xml` (todas las páginas, con `lastmod`) y `sitemap-noticias.xml` (formato Google News: las noticias publicadas en las 48 h anteriores a la última, en los dos idiomas). Los dos salen en robots.txt. En Search Console (propiedad de dominio bolapadel.es) está enviado sitemap.xml; sitemap-noticias.xml se le pidió a Luis que lo enviara el 24/10 (Search Console → Sitemaps).
+- Las noticias sin `hora` (las anteriores al 20/10) solo llevan el día; no se inventa la hora.
 
 ## Fotos
 - Luis está autorizado a usar las fotos de prensa de Premier Padel en Greenfly (portal.greenfly.com, canal 2089 → Biblioteca → Galerías). Hay que iniciar sesión con su cuenta: eso lo hace él, nunca Claude.

@@ -7,7 +7,7 @@
 <meta property="og:description" content="{{ n.seo_descripcion }}">
 <meta property="og:image" content="{{ sitio.url }}/{{ n.portada.imagen or 'img/compartir.jpg' }}">
 <meta property="og:url" content="{{ canonical }}">
-<meta property="article:published_time" content="{{ n.fecha.isoformat() }}">
+<meta property="article:published_time" content="{{ n.publicado }}">
 <meta property="article:section" content="{{ n.seccion_nombre }}">
 <meta name="keywords" content="{{ n.palabra_clave }}{% for e in n.etiquetas %}, {{ e }}{% endfor %}">
 {% endblock %}
@@ -20,7 +20,7 @@
     <p class="antetitulo"><a href="{{ rel(n.seccion_url) }}">{{ n.seccion_nombre }}</a>{% if n.etiquetas %} · {{ n.etiquetas[0] }}{% endif %}</p>
     <h1 class="noticia__titulo">{{ n.titulo }}</h1>
     <p class="noticia__entradilla">{{ n.entradilla }}</p>
-    <p class="firma">{{ t.por }} <strong>{{ n.autor }}</strong> · <time datetime="{{ n.fecha.isoformat() }}">{{ n.fecha_larga }}</time> · {{ n.minutos }} {{ t.min_lectura }}</p>
+    <p class="firma">{{ t.por }} <strong>{{ n.autor }}</strong> · <time datetime="{{ n.publicado }}">{{ n.fecha_larga }}</time> · {{ n.minutos }} {{ t.min_lectura }}</p>
   </header>
 
   <div class="envoltura noticia__portada">{{ p.portada(n, 'xl') }}</div>
