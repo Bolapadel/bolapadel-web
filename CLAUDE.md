@@ -19,7 +19,7 @@ Nada se publica sin el OK de Luis. Primero se le enseña la noticia redactada; s
 6. Tras el push, darle a Luis el enlace (pulsable) para pedir a Google que la lea: `https://search.google.com/search-console/inspect?resource_id=sc-domain%3Abolapadel.es&id=<URL de la noticia codificada>` → «Solicitar indexación». Google tarda horas en recoger una noticia nueva; la web es nueva y aún no tiene fuerza en Google.
 
 ## Google
-- `sitemap.xml` (todas las páginas, con `lastmod`) y `sitemap-noticias.xml` (formato Google News: las noticias publicadas en las 48 h anteriores a la última, en los dos idiomas). Los dos salen en robots.txt. En Search Console (propiedad de dominio bolapadel.es) está enviado sitemap.xml; sitemap-noticias.xml se le pidió a Luis que lo enviara el 24/10 (Search Console → Sitemaps).
+- `sitemap.xml` (todas las páginas, con `lastmod`) y `sitemap-noticias.xml` (formato Google News: las noticias publicadas en las 48 h anteriores a la última, en los dos idiomas). Los dos salen en robots.txt. Los dos están enviados en Search Console (propiedad de dominio bolapadel.es; sitemap-noticias.xml desde el 24/10). Al añadir un sitemap, esa propiedad pide la dirección completa (https://bolapadel.es/…), no solo el nombre del archivo.
 - Las noticias sin `hora` (las anteriores al 20/10) solo llevan el día; no se inventa la hora.
 
 ## Fotos
