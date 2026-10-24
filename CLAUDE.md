@@ -16,7 +16,7 @@ Nada se publica sin el OK de Luis. Primero se le enseña la noticia redactada; s
    - La `hora` también va, escondida, en los datos para Google: JSON-LD (`datePublished`), `article:published_time`, atributos `datetime`, `lastmod` del sitemap, `sitemap-noticias.xml` y RSS, con la zona de Madrid. **El lector nunca ve la hora** (Luis, 24/10): en la página solo sale el día.
 4. `python3 construir.py` (avisa si el SEO se sale de rango).
 5. Enseñar a Luis el texto. Con su OK: `git add -A && git commit && git push`.
-6. Tras el push, darle a Luis el enlace (pulsable) para pedir a Google que la lea: `https://search.google.com/search-console/inspect?resource_id=sc-domain%3Abolapadel.es&id=<URL de la noticia codificada>` → «Solicitar indexación». Google tarda horas en recoger una noticia nueva; la web es nueva y aún no tiene fuerza en Google.
+6. Tras el push, pedir a Luis que solicite la indexación: Search Console (`https://search.google.com/search-console?resource_id=sc-domain%3Abolapadel.es`) → lupa de arriba («Inspeccionar cualquier URL») → pegar la URL de la noticia → «Solicitar indexación». Darle la URL de la noticia para copiarla. (El enlace directo `…/search-console/inspect?…` da 404: no usarlo.) Google tarda horas en recoger una noticia nueva; la web es nueva y aún no tiene fuerza en Google.
 
 ## Google
 - `sitemap.xml` (todas las páginas, con `lastmod`) y `sitemap-noticias.xml` (formato Google News: las noticias publicadas en las 48 h anteriores a la última, en los dos idiomas). Los dos salen en robots.txt. Los dos están enviados en Search Console (propiedad de dominio bolapadel.es; sitemap-noticias.xml desde el 24/10). Al añadir un sitemap, esa propiedad pide la dirección completa (https://bolapadel.es/…), no solo el nombre del archivo.
