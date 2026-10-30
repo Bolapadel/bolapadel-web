@@ -9,6 +9,7 @@ fecha: 2026-10-18            # día de publicación (AAAA-MM-DD)
 seccion: actualidad          # actualidad | opinion | podcast
 autor: Luis González         # si se deja vacío, se usa el autor por defecto
 hora: "18:30"                # hora de publicación (HH:MM). La más reciente va arriba en la portada
+# actualizado: "2026-10-19 12:10"   # solo si se corrige o amplía después de publicarla (sale «Actualizada el …»)
 etiquetas: [Torneo, Jugador 1, Jugador 2]   # la primera aparece junto a la sección
 
 portada:

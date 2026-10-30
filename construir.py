@@ -53,7 +53,7 @@ MESES = {
 TEXTOS = {
     "es": {
         "portada": "Portada", "newsletter": "Newsletter", "suscribete": "Suscríbete",
-        "lo_ultimo": "Lo último", "por": "Por", "min_lectura": "min de lectura",
+        "lo_ultimo": "Lo último", "por": "Por", "min_lectura": "min de lectura", "actualizada": "Actualizada el",
         "compartir": "Compartir", "copiar": "Copiar enlace", "copiado": "Enlace copiado",
         "sigue_leyendo": "Sigue leyendo", "ver_todo": "Ver todo",
         "tu_correo": "Tu correo electrónico", "apuntarme": "Apuntarme",
@@ -91,7 +91,7 @@ TEXTOS = {
     },
     "en": {
         "portada": "Home", "newsletter": "Newsletter", "suscribete": "Subscribe",
-        "lo_ultimo": "Latest", "por": "By", "min_lectura": "min read",
+        "lo_ultimo": "Latest", "por": "By", "min_lectura": "min read", "actualizada": "Updated",
         "compartir": "Share", "copiar": "Copy link", "copiado": "Link copied",
         "sigue_leyendo": "Keep reading", "ver_todo": "See all",
         "tu_correo": "Your email address", "apuntarme": "Sign me up",
@@ -202,10 +202,19 @@ def cargar_noticias(avisos):
             sys.exit(f"[{nombre}] 'hora' debe ser HH:MM")
         # sin 'hora' (noticias antiguas) no se inventa: solo el día
         momento = momento_publicacion(fecha, hora) if tiene_hora else None
+        # 'actualizado: "AAAA-MM-DD HH:MM"' si la noticia se ha corregido o ampliado después de publicarla
+        actualizado = datos.get("actualizado")
+        if actualizado:
+            m_act = re.fullmatch(r"(\d{4}-\d{2}-\d{2})\s+(\d{1,2}:\d{2})", str(actualizado).strip())
+            if not m_act:
+                sys.exit(f"[{nombre}] 'actualizado' debe ser \"AAAA-MM-DD HH:MM\"")
+            actualizado = momento_publicacion(dt.date.fromisoformat(m_act[1]), m_act[2])
         n = {
             "archivo": nombre, "fecha": fecha, "hora": hora.zfill(5), "seccion": seccion,
             "publicado": momento.isoformat() if momento else fecha.isoformat(),
             "publicado_dt": momento,
+            "actualizado": actualizado.isoformat() if actualizado else None,
+            "modificado": actualizado.isoformat() if actualizado else (momento.isoformat() if momento else fecha.isoformat()),
             "autor": datos.get("autor") or None,
             "etiquetas": datos.get("etiquetas") or [],
             "portada": {
@@ -239,6 +248,7 @@ def cargar_noticias(avisos):
                 "seccion_url": url_seccion(seccion, idioma),
                 "fecha_larga": fecha_larga(fecha, idioma),
                 "fecha_corta": fecha_corta(fecha, idioma),
+                "actualizado_larga": fecha_larga(actualizado.date(), idioma) if actualizado else None,
             }
         noticias.append(n)
     # más reciente primero: fecha, luego hora de publicación, luego nombre de archivo
@@ -393,7 +403,7 @@ class Constructor:
                 relacionadas = [x for x in vista if x is not v][:3]
                 self.escribir(v["url"], "noticia.html", idioma,
                               {i: n[i]["url"] for i in IDIOMAS},
-                              lastmod=v["publicado"],
+                              lastmod=v["modificado"],
                               n=v, relacionadas=relacionadas,
                               titulo_pagina=v["seo_titulo"], descripcion=v["seo_descripcion"],
                               json_ld=self.json_ld(v, idioma))
@@ -425,6 +435,7 @@ class Constructor:
     def vista(self, n, idioma):
         v = dict(n[idioma])
         v.update(seccion=n["seccion"], fecha=n["fecha"], publicado=n["publicado"],
+                 actualizado=n["actualizado"], modificado=n["modificado"],
                  etiquetas=n["etiquetas"], portada=n["portada"],
                  autor=n["autor"] or self.sitio["autor_por_defecto"], _n=n)
         return v
@@ -479,7 +490,7 @@ class Constructor:
             "description": v["seo_descripcion"],
             "inLanguage": idioma,
             "datePublished": v["publicado"],
-            "dateModified": v["publicado"],
+            "dateModified": v["modificado"],
             "author": {"@type": "Person", "name": v["autor"]},
             "publisher": {"@type": "Organization", "name": self.sitio["nombre"],
                           "logo": {"@type": "ImageObject", "url": self.absoluta("img/logo.png")}},
