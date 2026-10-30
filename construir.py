@@ -222,6 +222,8 @@ def cargar_noticias(avisos):
                 "credito": portada.get("credito") or "",
                 "rotulo": portada.get("rotulo") or SECCIONES[seccion]["es"][1],
                 "dato": portada.get("dato") or "",
+                "rotulo_en": portada.get("rotulo_en") or "",   # solo para la tarjeta de redes en inglés
+                "dato_en": portada.get("dato_en") or "",
                 "foco": portada.get("foco") or "50% 50%",
             },
         }
@@ -250,6 +252,9 @@ def cargar_noticias(avisos):
                 "fecha_corta": fecha_corta(fecha, idioma),
                 "actualizado_larga": fecha_larga(actualizado.date(), idioma) if actualizado else None,
             }
+        # las tarjetas de redes se guardan por slug: si coinciden, la inglesa pisaría a la española
+        if n["es"]["slug"] == n["en"]["slug"]:
+            sys.exit(f"[{nombre}] el slug en inglés tiene que ser distinto del español (tarjetas de redes)")
         noticias.append(n)
     # más reciente primero: fecha, luego hora de publicación, luego nombre de archivo
     noticias.sort(key=lambda n: (n["fecha"], n["hora"], n["archivo"]), reverse=True)

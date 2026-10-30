@@ -181,7 +181,8 @@ def tarjeta(n, formato, raiz_imagenes, idioma="es"):
 
     # etiqueta: sección · rótulo
     seccion = v["seccion_nombre"]
-    rotulo = (portada.get("rotulo") or "").strip()
+    # en inglés, el rótulo traducido (portada.rotulo_en); si no lo hay, solo la sección
+    rotulo = ((portada.get("rotulo") if idioma == "es" else portada.get(f"rotulo_{idioma}")) or "").strip()
     etiqueta = seccion if not rotulo or rotulo.lower() == seccion.lower() else f"{seccion} · {rotulo}"
     etiqueta = etiqueta.upper()
     f_eti = _fuente("SairaCondensed-Bold", 34)
@@ -191,22 +192,26 @@ def tarjeta(n, formato, raiz_imagenes, idioma="es"):
     d.text((lado + 18, y_eti + 5), etiqueta, font=f_eti, fill=SOBRE_LIMA)
 
     # sin foto: el dato grande en el centro
-    if not con_foto and portada.get("dato"):
+    dato = (portada.get(f"dato_{idioma}") if idioma != "es" else None) or portada.get("dato")
+    if not con_foto and dato:
         f_dato = _fuente("SairaCondensed-ExtraBold", 72)
-        d.text((lado, round(h * 0.30)), portada["dato"], font=f_dato, fill=LIMA_CLARO)
+        d.text((lado, round(h * 0.30)), dato, font=f_dato, fill=LIMA_CLARO)
 
     return base.convert("RGB")
 
 
-def generar(noticias, salida, raiz_imagenes, idioma="es"):
-    """Escribe las tarjetas de todas las noticias en <salida>/img/redes/."""
+def generar(noticias, salida, raiz_imagenes, idiomas=("es", "en")):
+    """Escribe las tarjetas de todas las noticias en <salida>/img/redes/:
+    <slug-es>-ig.jpg / -tt.jpg (español) y <slug-en>-ig.jpg / -tt.jpg (inglés).
+    En redes van en carrusel: primero la española y después la inglesa (Luis, 30/10)."""
     carpeta = salida / "img" / "redes"
     carpeta.mkdir(parents=True, exist_ok=True)
     for n in noticias:
-        slug = n[idioma]["slug"]
-        for formato in FORMATOS:
-            img = tarjeta(n, formato, raiz_imagenes, idioma)
-            img.save(carpeta / f"{slug}-{formato}.jpg", "JPEG", quality=86, optimize=True, progressive=True)
+        for idioma in idiomas:
+            slug = n[idioma]["slug"]
+            for formato in FORMATOS:
+                img = tarjeta(n, formato, raiz_imagenes, idioma)
+                img.save(carpeta / f"{slug}-{formato}.jpg", "JPEG", quality=86, optimize=True, progressive=True)
     return carpeta
 
 
@@ -217,6 +222,7 @@ if __name__ == "__main__":
     destino = RAIZ / "herramientas" / "prueba-redes"
     destino.mkdir(parents=True, exist_ok=True)
     for n in ns:
-        for formato in FORMATOS:
-            tarjeta(n, formato, RAIZ / "estaticos").save(destino / f"{n['es']['slug']}-{formato}.jpg", quality=86)
+        for idioma in ("es", "en"):
+            for formato in FORMATOS:
+                tarjeta(n, formato, RAIZ / "estaticos", idioma).save(destino / f"{n[idioma]['slug']}-{formato}.jpg", quality=86)
     print("Tarjetas de prueba en", destino)

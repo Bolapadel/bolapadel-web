@@ -18,6 +18,8 @@ portada:
   foco: "50% 40%"            # punto de la foto que nunca se recorta (horizontal y vertical, en %); útil en fotos verticales
   rotulo: "Milano P1"        # texto grande de la portada gráfica (corto: 1-3 palabras o un marcador)
   dato: "Final · 18 oct"     # etiqueta pequeña de la portada gráfica
+  rotulo_en: "Milan P1"      # rótulo traducido para la tarjeta de redes en inglés (sin él, solo sale «News»)
+  dato_en: "Final · 18 Oct"  # dato traducido (solo portada gráfica; sin él, se usa el español)
 
 es:
   slug: palabras-clave-de-la-url        # minúsculas, sin tildes, separadas por guiones
@@ -48,13 +50,19 @@ en:
   cuerpo: |
     Same text, in English.
 
-# Redes (Instagram y TikTok vía Metricool). La tarjeta se genera sola al construir:
-# https://bolapadel.es/img/redes/<slug-es>-ig.jpg (4:5) y -tt.jpg (9:16).
+# Redes (Instagram y TikTok vía Metricool). Norma de Luis (30/10): carrusel de 2 tarjetas,
+# primero la española y después la inglesa, y el texto en los dos idiomas.
+# Las tarjetas se generan solas al construir (4:5 = -ig, 9:16 = -tt):
+#   docs/img/redes/<slug-es>-ig.jpg  y  docs/img/redes/<slug-en>-ig.jpg
 redes:
   texto: |
     Texto corto para Instagram y TikTok, con la voz de siempre. 3-6 líneas.
 
     La tienes entera en bolapadel.es
+
+    🇬🇧 The same, in English. Short.
+
+    Full story at bolapadel.es/en
 
     #padel #premierpadel
   instagram: ""              # lo rellena Claude al programar: fecha y hora
