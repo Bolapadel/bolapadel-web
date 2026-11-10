@@ -363,9 +363,10 @@ class Constructor:
         for idioma in IDIOMAS:
             vista = [self.vista(n, idioma) for n in self.noticias]
             actualidad = [v for v in vista if v["seccion"] != "opinion"]
-            # arriba va siempre la última publicada; las demás pasan a «Lo último»
-            destacada = actualidad[0] if actualidad else None
-            resto = [v for v in actualidad if v is not destacada][:6]
+            # portada: noticias y opiniones juntas (Luis, 10/11). Arriba va siempre
+            # la última publicada; las demás pasan a «Lo último»
+            destacada = vista[0] if vista else None
+            resto = [v for v in vista if v is not destacada][:6]
             opinion = [v for v in vista if v["seccion"] == "opinion"][:3]
 
             episodios = [self.vista_episodio(e, idioma) for e in self.episodios]
@@ -380,7 +381,7 @@ class Constructor:
                           {i: PREFIJO[i] for i in IDIOMAS},
                           lastmod=max([x for x in ultimo.values() if x], default=None,
                                       key=lambda x: x[:10]),
-                          destacada=destacada, resto=resto, opinion=opinion,
+                          destacada=destacada, resto=resto,
                           ultimo_episodio=episodios[0] if episodios else None,
                           titulo_pagina=None, descripcion=self.sitio["textos"][idioma]["descripcion"])
 

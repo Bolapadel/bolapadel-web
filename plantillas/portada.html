@@ -32,18 +32,6 @@
 
 {% if sitio.publicidad and sitio.publicidad.portada_abajo %}{{ p.publi('envoltura publi--portada-abajo', sitio.publicidad.portada_abajo) }}{% endif %}
 
-{% if opinion %}
-<section class="opinion">
-  <div class="envoltura">
-    <div class="bloque__cab">
-      <h2 class="titulo-bloque">{{ secciones[1][1] }}</h2>
-      <a class="enlace-flecha" href="{{ rel(secciones[1][2]) }}">{{ t.ver_todo }}</a>
-    </div>
-    {% for n in opinion %}{{ p.columna(n, loop.first) }}{% endfor %}
-  </div>
-</section>
-{% endif %}
-
 <section class="banda" id="newsletter">
   <div class="envoltura banda__in">
     <div class="banda__col">
