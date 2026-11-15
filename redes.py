@@ -42,10 +42,11 @@ def _foco(foco):
         return 0.5, 0.5
 
 
-def _recortar(img, w, h, foco):
-    """Recorte tipo object-fit: cover, respetando el foco (x% y%)."""
+def _recortar(img, w, h, foco, zoom=1.0):
+    """Recorte tipo object-fit: cover, respetando el foco (x% y%). zoom > 1 amplía la foto
+    para poder moverla (útil cuando la foto ya tiene la proporción de la tarjeta)."""
     fx, fy = _foco(foco)
-    escala = max(w / img.width, h / img.height)
+    escala = max(w / img.width, h / img.height) * max(float(zoom or 1), 1.0)
     nw, nh = round(img.width * escala), round(img.height * escala)
     img = img.resize((nw, nh), Image.LANCZOS)
     x = round((nw - w) * fx)
@@ -130,7 +131,9 @@ def tarjeta(n, formato, raiz_imagenes, idioma="es"):
             base.paste(_recortar(foto, w, alto_foto, foco), (0, 0))
             base = Image.alpha_composite(base, _degradado(w, h, alto_foto - 520, alto_foto, NOCHE, 255, curva=1.3))
         else:
-            base = _recortar(foto, w, h, foco).convert("RGBA")
+            # Instagram: si el titular tapa caras, portada.redes_zoom + portada.redes_foco suben la foto
+            base = _recortar(foto, w, h, portada.get("redes_foco") or foco,
+                             portada.get("redes_zoom") or 1.0).convert("RGBA")
             base = Image.alpha_composite(base, _degradado(w, h, round(h * 0.34), round(h * 0.86), NOCHE, 238))
         # sombra suave arriba para que el logo se lea sobre cualquier foto
         sombra = Image.new("RGBA", (w, 300), NOCHE + (0,))

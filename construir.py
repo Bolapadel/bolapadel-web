@@ -225,6 +225,9 @@ def cargar_noticias(avisos):
                 "rotulo_en": portada.get("rotulo_en") or "",   # solo para la tarjeta de redes en inglés
                 "dato_en": portada.get("dato_en") or "",
                 "foco": portada.get("foco") or "50% 50%",
+                # solo para la tarjeta de Instagram: ampliar y mover la foto si el titular tapa caras
+                "redes_zoom": portada.get("redes_zoom") or 1.0,
+                "redes_foco": portada.get("redes_foco") or "",
             },
         }
         for idioma in IDIOMAS:

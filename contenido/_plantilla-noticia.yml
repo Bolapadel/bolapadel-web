@@ -16,6 +16,8 @@ portada:
   imagen: ""                 # foto propia, cedida o de prensa autorizada (Greenfly de Premier Padel), en estaticos/img/noticias/. Vacío = portada gráfica
   credito: ""                # "Nombre del fotógrafo / Premier Padel" (sale en la foto)
   foco: "50% 40%"            # punto de la foto que nunca se recorta (horizontal y vertical, en %); útil en fotos verticales
+  # redes_zoom: 1.25          # solo tarjeta de Instagram: amplía la foto para poder moverla (si el texto tapa caras)
+  # redes_foco: "50% 100%"    # solo tarjeta de Instagram: foco con el zoom; 100 % vertical = foto más arriba
   rotulo: "Milano P1"        # texto grande de la portada gráfica (corto: 1-3 palabras o un marcador)
   dato: "Final · 18 oct"     # etiqueta pequeña de la portada gráfica
   rotulo_en: "Milan P1"      # rótulo traducido para la tarjeta de redes en inglés (sin él, solo sale «News»)
