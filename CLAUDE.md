@@ -44,6 +44,7 @@ Nada se publica sin el OK de Luis. Primero se le enseña la noticia redactada; s
 ## Publicidad
 - Decisión de Luis (22/10): en la **portada**, PadelPROShop fijo encima de la noticia principal y Samogrip fijo debajo de «Lo último». En **cada noticia**, PadelPROShop justo después del texto (tras la firma) y Samogrip después del recuadro de la newsletter. **Nunca publicidad en medio del texto** (Luis, 22/10).
 - Todo se configura en `sitio.yml` → `publicidad` (`portada_arriba`, `portada_abajo`, `noticias_final`, `noticias_abajo` y la lista `banners` con marca, enlace, imagen 1200x300, imagen_movil 770x300 y alt). Imágenes en `estaticos/img/publicidad/`. Siempre con la etiqueta «Publicidad» y `rel="sponsored"`.
+- **Campañas con fecha** (18/11): un banner con `desde` / `hasta` (AAAA-MM-DD, ambos incluidos) en `banners` sustituye al banner normal de su misma marca mientras está vigente y desaparece solo al acabar (`banners_vigentes` en construir.py; la construcción del podcast corre dos veces al día, así que el cambio sale en la siguiente). Primera: Black Week de PadelPROShop, 16-29/11/2026 (banner hecho a partir de la gráfica oficial que mandó la tienda; enlace de descuento con `utm_` que les dio PadelPROShop).
 - Las versiones móviles son la parte del banner con el logo y el código, para que se lea. El banner de Samogrip lo rediseñó Claude a partir del de Luis (fondo kraft, cupón BOLAPADEL10).
 
 ## Podcast
