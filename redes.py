@@ -23,10 +23,14 @@ PORTADA_A = (30, 92, 163)
 PORTADA_B = (16, 57, 107)
 BLANCO = (255, 255, 255)
 
+TT_TOPE = 280
+
 FORMATOS = {
     # ancho, alto, margen lateral, margen inferior, margen derecho, alto zona logo
     "ig": dict(w=1080, h=1350, lado=72, abajo=72, derecha=72, arriba=64, max_lineas=5),
-    "tt": dict(w=1080, h=1920, lado=72, abajo=430, derecha=170, arriba=150, max_lineas=6),
+    # TikTok tapa los ~280 px de arriba (barra de estado y buscador) y los ~190 de abajo (texto del post):
+    # logo y caras, por debajo de TT_TOPE (Luis, 18/11: el buscador tapaba el logo y la cara de Tapia)
+    "tt": dict(w=1080, h=1920, lado=72, abajo=360, derecha=170, arriba=310, max_lineas=6),
 }
 
 
@@ -126,10 +130,22 @@ def tarjeta(n, formato, raiz_imagenes, idioma="es"):
         foco = portada.get("foco") or "50% 50%"
         if formato == "tt":
             # TikTok: la foto arriba y el texto sobre fondo oscuro, para no tapar caras
-            alto_foto = 1240
-            base = Image.new("RGBA", (w, h), NOCHE + (255,))
-            base.paste(_recortar(foto, w, alto_foto, foco), (0, 0))
-            base = Image.alpha_composite(base, _degradado(w, h, alto_foto - 520, alto_foto, NOCHE, 255, curva=1.3))
+            # TikTok (Luis, 18/11): la foto entera, sin cortar por arriba (TikTok tapa los TT_TOPE px de arriba),
+            # sobre la misma foto desenfocada de fondo (nada de bloque oscuro), y el texto encima de la parte de abajo
+            fondo = _recortar(foto, w, h, foco).filter(ImageFilter.GaussianBlur(40))
+            fondo = Image.blend(fondo, Image.new("RGB", (w, h), NOCHE), 0.35)
+            base = fondo.convert("RGBA")
+            y_foto = TT_TOPE + 20
+            alto_foto = min(round(w * foto.height / foto.width), h - cfg["abajo"] - y_foto)
+            nitida = _recortar(foto, w, alto_foto, foco).convert("RGBA")
+            borde = Image.new("L", (w, alto_foto), 255)
+            for y in range(min(60, alto_foto // 4)):  # bordes suaves arriba y abajo
+                borde.paste(round(255 * y / 60), (0, y, w, y + 1))
+            for y in range(min(140, alto_foto // 3)):
+                borde.paste(round(255 * y / 140), (0, alto_foto - 1 - y, w, alto_foto - y))
+            nitida.putalpha(borde)
+            base.alpha_composite(nitida, (0, y_foto))
+            base = Image.alpha_composite(base, _degradado(w, h, round(h * 0.42), h - cfg["abajo"] - 60, NOCHE, 205, curva=1.4))
         else:
             # Instagram: si el titular tapa caras, portada.redes_zoom + portada.redes_foco suben la foto
             base = _recortar(foto, w, h, portada.get("redes_foco") or foco,
@@ -139,7 +155,7 @@ def tarjeta(n, formato, raiz_imagenes, idioma="es"):
         sombra = Image.new("RGBA", (w, 300), NOCHE + (0,))
         mascara = Image.linear_gradient("L").rotate(180).resize((w, 300)).point(lambda a: round(a * 0.45))
         sombra.putalpha(mascara)
-        base.alpha_composite(sombra, (0, 0))
+        base.alpha_composite(sombra, (0, TT_TOPE if formato == "tt" else 0))
         con_foto = True
     else:
         base = _fondo_grafico(w, h)
