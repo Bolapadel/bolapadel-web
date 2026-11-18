@@ -30,6 +30,14 @@ publicidad:
   noticias_final: PadelPROShop   # en cada noticia, justo después del texto (tras la firma)
   noticias_abajo: Samogrip       # en cada noticia, después del recuadro de la newsletter
   banners:
+    # Campaña: con desde/hasta (ambos incluidos) sustituye al banner normal de la marca y desaparece sola al acabar.
+    - marca: PadelPROShop
+      desde: "2026-11-16"
+      hasta: "2026-11-29"
+      enlace: "https://padelproshop.com/discount/BOLAPADEL?utm_source=instagram&utm_medium=ambassador&utm_campaign=blackfriday&utm_content=story_bolapadel"
+      imagen: img/publicidad/padelproshop-black-week.jpg
+      imagen_movil: img/publicidad/padelproshop-black-week-movil.jpg
+      alt: "PadelPROShop Black Week, del 16 al 29 de noviembre: código BOLAPADEL, 10 % de descuento"
     - marca: PadelPROShop
       enlace: "https://padelproshop.com"
       imagen: img/publicidad/padelproshop.jpg

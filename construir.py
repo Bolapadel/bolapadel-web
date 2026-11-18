@@ -285,12 +285,33 @@ def cargar_episodios():
     return episodios
 
 
+def banners_vigentes(sitio):
+    """Banners de campaña (Black Week, etc.) con `desde` / `hasta` (AAAA-MM-DD, ambos incluidos).
+    Fuera de sus fechas no salen. Mientras una campaña está vigente, sustituye a los banners
+    normales de su misma marca; al acabar, vuelven solos en la siguiente construcción
+    (la del podcast corre dos veces al día)."""
+    pub = sitio.get("publicidad") or {}
+    banners = pub.get("banners") or []
+    hoy = dt.datetime.now(ZONA).date() if ZONA else dt.date.today()
+
+    def fecha(v):
+        return v if isinstance(v, dt.date) else (dt.date.fromisoformat(str(v)) if v else None)
+
+    vigentes = [b for b in banners
+                if not (fecha(b.get("desde")) and hoy < fecha(b.get("desde")))
+                and not (fecha(b.get("hasta")) and hoy > fecha(b.get("hasta")))]
+    con_campana = {b["marca"] for b in vigentes if b.get("desde") or b.get("hasta")}
+    pub["banners"] = [b for b in vigentes
+                      if b["marca"] not in con_campana or b.get("desde") or b.get("hasta")]
+
+
 # ---------------------------------------------------------------- render
 class Constructor:
     def __init__(self, preview):
         self.preview = preview
         self.sitio = yaml.safe_load((RAIZ / "sitio.yml").read_text(encoding="utf-8"))
         self.sitio["url"] = self.sitio["url"].rstrip("/")
+        banners_vigentes(self.sitio)
         self.env = Environment(loader=FileSystemLoader(RAIZ / "plantillas"),
                                autoescape=select_autoescape(["html"]),
                                trim_blocks=True, lstrip_blocks=True)
