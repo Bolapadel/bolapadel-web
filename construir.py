@@ -228,6 +228,10 @@ def cargar_noticias(avisos):
                 # solo para la tarjeta de Instagram: ampliar y mover la foto si el titular tapa caras
                 "redes_zoom": portada.get("redes_zoom") or 1.0,
                 "redes_foco": portada.get("redes_foco") or "",
+                # foto distinta solo para las tarjetas de redes (Luis, 23/11); la web usa «imagen»
+                "redes_imagen": portada.get("redes_imagen") or "",
+                "redes_credito": portada.get("redes_credito") or "",
+                "redes_imagen_foco": portada.get("redes_imagen_foco") or "",
             },
         }
         for idioma in IDIOMAS:

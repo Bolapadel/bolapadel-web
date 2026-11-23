@@ -122,8 +122,14 @@ def tarjeta(n, formato, raiz_imagenes, idioma="es"):
     """Devuelve la tarjeta (Image RGB) de una noticia ya cargada por construir.py."""
     cfg = FORMATOS[formato]
     w, h = cfg["w"], cfg["h"]
-    portada = n["portada"]
+    portada = dict(n["portada"])
     v = n[idioma]
+    # Foto distinta solo para las tarjetas de redes (Luis, 23/11): portada.redes_imagen
+    # (+ redes_credito y redes_imagen_foco). La web sigue usando portada.imagen.
+    if portada.get("redes_imagen"):
+        portada["imagen"] = portada["redes_imagen"]
+        portada["credito"] = portada.get("redes_credito") or portada.get("credito")
+        portada["foco"] = portada.get("redes_imagen_foco") or portada.get("foco")
 
     if portada.get("imagen") and not portada["imagen"].startswith("http"):
         foto = Image.open(raiz_imagenes / portada["imagen"]).convert("RGB")
