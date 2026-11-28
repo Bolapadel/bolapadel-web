@@ -58,6 +58,8 @@ Nada se publica sin el OK de Luis. Primero se le enseña la noticia redactada; s
 ## Tono editorial
 Frases cortas, directo, confesional, estilo Isra Bravo. Nada de clickbait ni lenguaje corporativo. Respeto total a jugadores, representantes y sus entornos. Sin párrafos-bloque. Bola Pádel y Padelkora son marcas separadas: no mezclarlas.
 
+**Despedidas primero** (Luis, 28/11: «Enfoca más en Ale Salazar al ser su despedida del pádel profesional»): si en la noticia hay una despedida (el último torneo de una leyenda), el titular, la portada y las redes van de esa despedida, aunque haya noticia del cuadro masculino. Lo demás queda en un bloque aparte. Ejemplo: Ale Salazar a las Finals de Barcelona, con Libaak en segundo plano.
+
 ## Estructura
 - `sitio.yml` — configuración (URL, dominio, redes, MailerLite, podcast, textos).
 - `contenido/noticias/` — una noticia por archivo YAML.
